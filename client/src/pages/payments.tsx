@@ -11,14 +11,22 @@ import { FileDown } from "lucide-react";
 export default function PaymentsPage() {
   const [addPaymentOpen, setAddPaymentOpen] = useState(false);
   const [paymentType, setPaymentType] = useState<"card" | "bank">("card");
+  const [defaultPaymentId, setDefaultPaymentId] = useState(1);
   const { toast } = useToast();
 
   const handleMakeDefault = (cardId: number) => {
+    setDefaultPaymentId(cardId);
     toast({
       title: "Default Payment Method Updated",
       description: "Your default payment method has been updated successfully."
     });
   };
+
+  const mockCards = [
+    { id: 1, last4: "4455", expiry: "09/24", type: "VISA" },
+    { id: 2, last4: "8791", expiry: "12/25", type: "VISA" },
+    { id: 3, last4: "3344", expiry: "03/26", type: "MASTERCARD" },
+  ];
 
   return (
     <div className="container mx-auto p-6">
@@ -130,26 +138,26 @@ export default function PaymentsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center justify-between p-4 border rounded relative">
-                  {i === 1 && (
+              {mockCards.map((card) => (
+                <div key={card.id} className="flex items-center justify-between p-4 border rounded relative">
+                  {card.id === defaultPaymentId && (
                     <div className="absolute -top-2 right-2 bg-black text-white text-xs px-2 py-0.5 rounded">
                       Default
                     </div>
                   )}
                   <div className="flex items-center gap-4">
-                    <div className="bg-primary/10 p-2 rounded">VISA</div>
+                    <div className="bg-primary/10 p-2 rounded">{card.type}</div>
                     <div>
-                      <div className="font-medium">•••• •••• •••• 4455</div>
-                      <div className="text-sm text-muted-foreground">Expires 09/24</div>
+                      <div className="font-medium">•••• •••• •••• {card.last4}</div>
+                      <div className="text-sm text-muted-foreground">Expires {card.expiry}</div>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    {i !== 1 && (
+                    {card.id !== defaultPaymentId && (
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => handleMakeDefault(i)}
+                        onClick={() => handleMakeDefault(card.id)}
                       >
                         Make Default
                       </Button>

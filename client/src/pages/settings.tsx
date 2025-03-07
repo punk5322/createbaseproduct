@@ -15,9 +15,80 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [addArtistDialog, setAddArtistDialog] = useState(false);
   const [addSongwriterDialog, setAddSongwriterDialog] = useState(false);
+  const [artistNames, setArtistNames] = useState(user?.artistNames || []);
+  const [songwriterNames, setSongwriterNames] = useState(user?.songwriterNames || []);
+  const [newArtistFirstName, setNewArtistFirstName] = useState("");
+  const [newArtistLastName, setNewArtistLastName] = useState("");
+  const [newSongwriterFirstName, setNewSongwriterFirstName] = useState("");
+  const [newSongwriterLastName, setNewSongwriterLastName] = useState("");
   const { toast } = useToast();
 
+  const handleAddArtistName = () => {
+    if (!newArtistFirstName || !newArtistLastName) {
+      toast({
+        title: "Error",
+        description: "Please enter both first and last name",
+        variant: "destructive"
+      });
+      return;
+    }
+    const newName = `${newArtistFirstName} ${newArtistLastName}`;
+    setArtistNames([...artistNames, newName]);
+    setNewArtistFirstName("");
+    setNewArtistLastName("");
+    setAddArtistDialog(false);
+    toast({
+      title: "Artist Name Added",
+      description: "The artist name has been added successfully."
+    });
+  };
+
+  const handleAddSongwriterName = () => {
+    if (!newSongwriterFirstName || !newSongwriterLastName) {
+      toast({
+        title: "Error",
+        description: "Please enter both first and last name",
+        variant: "destructive"
+      });
+      return;
+    }
+    const newName = `${newSongwriterFirstName} ${newSongwriterLastName}`;
+    setSongwriterNames([...songwriterNames, newName]);
+    setNewSongwriterFirstName("");
+    setNewSongwriterLastName("");
+    setAddSongwriterDialog(false);
+    toast({
+      title: "Songwriter Name Added",
+      description: "The songwriter name has been added successfully."
+    });
+  };
+
+  const handleRemoveArtistName = (indexToRemove: number) => {
+    setArtistNames(artistNames.filter((_, index) => index !== indexToRemove));
+    toast({
+      title: "Artist Name Removed",
+      description: "The artist name has been removed successfully."
+    });
+  };
+
+  const handleRemoveSongwriterName = (indexToRemove: number) => {
+    setSongwriterNames(songwriterNames.filter((_, index) => index !== indexToRemove));
+    toast({
+      title: "Songwriter Name Removed",
+      description: "The songwriter name has been removed successfully."
+    });
+  };
+
   const handleSaveChanges = () => {
+    if (artistNames.length === 0 || songwriterNames.length === 0) {
+      toast({
+        title: "Error",
+        description: "At least one artist name and one songwriter name are required",
+        variant: "destructive"
+      });
+      return;
+    }
+
     toast({
       title: "Settings Updated",
       description: "Your settings have been saved successfully."
@@ -93,19 +164,14 @@ export default function SettingsPage() {
                 <div>
                   <Label>Artist Names</Label>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {user?.artistNames?.map((name, index) => (
+                    {artistNames.map((name, index) => (
                       <div key={index} className="flex items-center gap-2 bg-secondary p-2 rounded">
                         <Avatar className="h-6 w-6" />
                         <span>{name}</span>
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          onClick={() => {
-                            toast({
-                              title: "Artist Name Removed",
-                              description: "The artist name has been removed successfully."
-                            });
-                          }}
+                          onClick={() => handleRemoveArtistName(index)}
                         >
                           ✕
                         </Button>
@@ -123,11 +189,19 @@ export default function SettingsPage() {
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <Label>First Name</Label>
-                              <Input className="mt-2" />
+                              <Input 
+                                className="mt-2" 
+                                value={newArtistFirstName}
+                                onChange={(e) => setNewArtistFirstName(e.target.value)}
+                              />
                             </div>
                             <div>
                               <Label>Last Name</Label>
-                              <Input className="mt-2" />
+                              <Input 
+                                className="mt-2" 
+                                value={newArtistLastName}
+                                onChange={(e) => setNewArtistLastName(e.target.value)}
+                              />
                             </div>
                           </div>
                           <div className="flex gap-4">
@@ -136,13 +210,7 @@ export default function SettingsPage() {
                             </Button>
                             <Button 
                               className="flex-1"
-                              onClick={() => {
-                                setAddArtistDialog(false);
-                                toast({
-                                  title: "Artist Name Added",
-                                  description: "The artist name has been added successfully."
-                                });
-                              }}
+                              onClick={handleAddArtistName}
                             >
                               Add
                             </Button>
@@ -156,19 +224,14 @@ export default function SettingsPage() {
                 <div>
                   <Label>Songwriter Names</Label>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {user?.songwriterNames?.map((name, index) => (
+                    {songwriterNames.map((name, index) => (
                       <div key={index} className="flex items-center gap-2 bg-secondary p-2 rounded">
                         <Avatar className="h-6 w-6" />
                         <span>{name}</span>
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          onClick={() => {
-                            toast({
-                              title: "Songwriter Name Removed",
-                              description: "The songwriter name has been removed successfully."
-                            });
-                          }}
+                          onClick={() => handleRemoveSongwriterName(index)}
                         >
                           ✕
                         </Button>
@@ -186,11 +249,19 @@ export default function SettingsPage() {
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <Label>First Name</Label>
-                              <Input className="mt-2" />
+                              <Input 
+                                className="mt-2" 
+                                value={newSongwriterFirstName}
+                                onChange={(e) => setNewSongwriterFirstName(e.target.value)}
+                              />
                             </div>
                             <div>
                               <Label>Last Name</Label>
-                              <Input className="mt-2" />
+                              <Input 
+                                className="mt-2" 
+                                value={newSongwriterLastName}
+                                onChange={(e) => setNewSongwriterLastName(e.target.value)}
+                              />
                             </div>
                           </div>
                           <div className="flex gap-4">
@@ -199,13 +270,7 @@ export default function SettingsPage() {
                             </Button>
                             <Button 
                               className="flex-1"
-                              onClick={() => {
-                                setAddSongwriterDialog(false);
-                                toast({
-                                  title: "Songwriter Name Added",
-                                  description: "The songwriter name has been added successfully."
-                                });
-                              }}
+                              onClick={handleAddSongwriterName}
                             >
                               Add
                             </Button>
