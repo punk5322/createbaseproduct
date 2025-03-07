@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, CreditCard, Database } from "lucide-react";
+import { Header } from "@/components/ui/header";
 
 export default function HowItWorksPage() {
   const [, setLocation] = useLocation();
@@ -15,6 +16,7 @@ export default function HowItWorksPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="container mx-auto px-4 py-8">
         <Card className="max-w-3xl mx-auto">
           <CardHeader>
@@ -22,9 +24,6 @@ export default function HowItWorksPage() {
           </CardHeader>
           <CardContent className="space-y-8">
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold bg-[#E8FB60] inline-block px-4 py-1">
-                How It Works
-              </h2>
               <h3 className="text-xl font-semibold">
                 CreateBase acts as your personal royalty accountant and detective.
               </h3>
@@ -48,7 +47,7 @@ export default function HowItWorksPage() {
             </div>
 
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold bg-[#E8FB60] inline-block px-4 py-1">
+              <h2 className="text-2xl font-semibold">
                 Planning Made Simple
               </h2>
               <div className="space-y-4">
@@ -82,12 +81,21 @@ export default function HowItWorksPage() {
               </div>
             </div>
 
-            <Button 
-              className="w-full"
-              onClick={() => setLocation("/payment")}
-            >
-              Continue
-            </Button>
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setLocation("/auth")}
+              >
+                Back
+              </Button>
+              <Button 
+                className="flex-1"
+                onClick={() => setLocation("/payment")}
+              >
+                Continue
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

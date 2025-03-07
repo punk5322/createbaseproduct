@@ -58,17 +58,52 @@ export default function EULAPage() {
               <h2 className="text-lg font-semibold mb-4">Intellectual Property Rights</h2>
               <p className="mb-4">
                 The Software and all associated intellectual property rights are owned exclusively by
-                The Cur8 Group Corp. or its licensors. You retain ownership of anything you upload,
-                but you give us permission to use it as needed to operate our service.
+                The Cur8 Group Corp. or its licensors. You retain ownership of your intellectual property rights 
+                in any User Content uploaded to the Platform.
               </p>
 
-              <h2 className="text-lg font-semibold mb-4">User Obligations</h2>
+              <h2 className="text-lg font-semibold mb-4">User Content and Intellectual Property Disclaimer</h2>
               <p className="mb-4">
-                You agree to comply with all applicable laws and regulations when using the Software,
-                provide accurate information, and maintain the security of your account.
+                By uploading, submitting, or otherwise making available content through the Platform ("User Content"), 
+                you retain ownership of your intellectual property rights in the User Content.
+                The Cur8 Group Corp. expressly disclaims any ownership or control over the copyrights or other 
+                intellectual property rights of any User Content uploaded to the Platform.
               </p>
 
-              {/* Add more sections as needed from the provided EULA text */}
+              <h2 className="text-lg font-semibold mb-4">IP Metadata Registration and Royalty Collection</h2>
+              <p className="mb-4">
+                By using the Platform, you authorize The Cur8 Group Corp. to register creative intellectual property (IP) metadata 
+                on your behalf and to act as your publishing entity for the sole purpose of facilitating royalty collection.
+                The Cur8 Group Corp. expressly disclaims any ownership or control over the copyrights to any IP referenced 
+                by user-uploaded metadata.
+              </p>
+
+              <h2 className="text-lg font-semibold mb-4">User Obligations and Prohibited Activities</h2>
+              <p className="mb-4">
+                You agree to comply with all applicable laws, regulations, and acceptable use policies when using the Software.
+                You must provide accurate, current, and complete information as required for your use of the Software.
+                You must maintain the security and confidentiality of your account credentials.
+              </p>
+
+              <h2 className="text-lg font-semibold mb-4">Termination</h2>
+              <p className="mb-4">
+                The Cur8 Group Corp. reserves the right to suspend or terminate your access to the Software at any time
+                and for any reason, with or without cause, including for your breach of this EULA.
+              </p>
+
+              <h2 className="text-lg font-semibold mb-4">Governing Law and Dispute Resolution</h2>
+              <p className="mb-4">
+                This Agreement is governed by Delaware law. Any disputes will be resolved exclusively in San Diego County, California.
+                Any disputes arising from this EULA shall be resolved through binding arbitration in San Diego, California.
+              </p>
+
+              <h2 className="text-lg font-semibold mb-4">Miscellaneous</h2>
+              <p className="mb-4">
+                This EULA constitutes the entire agreement between you and The Cur8 Group Corp. concerning the Software.
+                No waiver of any term of this EULA shall be deemed a further or continuing waiver.
+                If any provision of this EULA is found to be invalid or unenforceable, the remaining provisions will remain 
+                in full force and effect.
+              </p>
             </div>
 
             <div className="flex items-center space-x-2">

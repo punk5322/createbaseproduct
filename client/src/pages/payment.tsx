@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
 import { Loader2, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Redirect } from "wouter";
+import { useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
+import { Redirect } from "wouter";
 
 export default function Payment() {
-  const { user, updateUser } = useAuth(); 
+  const { user, updateUserMutation } = useAuth(); 
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
 
   if (user?.paymentStatus === "completed") {
@@ -25,7 +27,8 @@ export default function Payment() {
         title: "Payment successful",
         description: "Please proceed to review the EULA",
       });
-      updateUser({ ...user, paymentStatus: "completed" });
+      updateUserMutation.mutate({ ...user, paymentStatus: "completed" });
+      setLocation("/eula");
     } catch (error: any) {
       toast({
         title: "Payment failed",
@@ -57,20 +60,29 @@ export default function Payment() {
                   This covers identity verification, royalty recovery, and ongoing collection services.
                 </p>
               </div>
-              <Button
-                onClick={handlePayment}
-                disabled={isProcessing}
-                className="w-full"
-              >
-                {isProcessing ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  "Pay $20"
-                )}
-              </Button>
+              <div className="flex gap-4">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setLocation("/how-it-works")}
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={handlePayment}
+                  disabled={isProcessing}
+                  className="flex-1"
+                >
+                  {isProcessing ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Pay $20"
+                  )}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

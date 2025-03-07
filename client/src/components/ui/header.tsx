@@ -7,10 +7,11 @@ export function Header() {
   const { logoutMutation } = useAuth();
 
   return (
-    <div className="flex justify-between items-center p-4 border-b">
+    <div className="flex justify-between items-center p-4 border-b bg-background">
       <Logo />
       <Button
         variant="outline"
+        size="sm"
         onClick={() => logoutMutation.mutate()}
         disabled={logoutMutation.isPending}
       >
