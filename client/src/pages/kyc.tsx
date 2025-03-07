@@ -39,13 +39,13 @@ export default function KYCPage() {
       const driverLicenseUrl = "https://example.com/license.jpg";
 
       await apiRequest("POST", "/api/kyc", { driverLicenseUrl });
-      
+
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
         title: "KYC Completed",
         description: "Your driver's license has been uploaded successfully",
       });
-      setLocation("/");
+      setLocation("/dashboard");  // Changed from "/" to "/dashboard"
     } catch (error: any) {
       toast({
         title: "Upload Failed",
