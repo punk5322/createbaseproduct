@@ -125,12 +125,14 @@ export default function EULAPage() {
                 variant="outline"
                 className="flex-1"
                 onClick={() => setLocation("/payment")}
+                type="button"
               >
                 Back
               </Button>
               <Button
                 className="flex-1"
                 onClick={handleContinue}
+                type="button"
               >
                 Next: Verify Identity
               </Button>

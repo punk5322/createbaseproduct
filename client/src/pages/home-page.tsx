@@ -6,7 +6,7 @@ import { Song } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SongTable from "@/components/song-table";
-import { Loader2, LogOut, Search } from "lucide-react";
+import { Loader2, LogOut, Search, Sparkles, Plus } from "lucide-react";
 import AddSongSheet from "@/components/add-song-sheet";
 import { Logo } from "@/components/ui/logo";
 import { Input } from "@/components/ui/input";
@@ -112,12 +112,21 @@ export default function HomePage() {
               <p className="text-3xl font-bold">$42,150.00</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent hover:bg-primary/20 transition-colors cursor-pointer" onClick={() => setLocation("/add-song")}>
             <CardHeader>
-              <CardTitle>Claim Status</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Story to Splits
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold capitalize">{user?.kycStatus}</p>
+              <p className="text-sm text-muted-foreground">
+                Let our AI assistant help you document your song's story and automatically generate fair splits
+              </p>
+              <Button variant="secondary" className="w-full mt-4">
+                <Plus className="h-4 w-4 mr-2" />
+                Start New Story
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -132,7 +141,6 @@ export default function HomePage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full"
-                  icon={<Search className="h-4 w-4" />}
                 />
               </div>
               <Select value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
