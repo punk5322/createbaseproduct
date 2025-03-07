@@ -35,6 +35,89 @@ async function comparePasswords(supplied: string, stored: string) {
   }
 }
 
+// Initial song catalog data
+const INITIAL_SONGS = [
+  {
+    title: "Privileged Rappers",
+    artist: "Drake & 21 Savage",
+    status: "unclaimed",
+    splitData: {
+      music: [
+        { name: "Drake", percentage: 50 },
+        { name: "21 Savage", percentage: 50 }
+      ],
+      lyrics: [
+        { name: "Drake", percentage: 50 },
+        { name: "21 Savage", percentage: 50 }
+      ],
+      instruments: [
+        { name: "Audio Engineer 1", percentage: 25 },
+        { name: "Audio Engineer 2", percentage: 25 },
+        { name: "Producer 1", percentage: 25 },
+        { name: "Producer 2", percentage: 25 }
+      ]
+    }
+  },
+  {
+    title: "Money In The Grave",
+    artist: "Drake & Rick Ross",
+    status: "unclaimed",
+    splitData: {
+      music: [
+        { name: "Drake", percentage: 60 },
+        { name: "Rick Ross", percentage: 40 }
+      ],
+      lyrics: [
+        { name: "Drake", percentage: 70 },
+        { name: "Rick Ross", percentage: 30 }
+      ],
+      instruments: [
+        { name: "Producer", percentage: 50 },
+        { name: "Audio Engineer", percentage: 30 },
+        { name: "Vocals (Drake)", percentage: 10 },
+        { name: "Vocals (Rick Ross)", percentage: 10 }
+      ]
+    }
+  },
+  {
+    title: "Rich Flex",
+    artist: "Drake & 21 Savage",
+    status: "claimed",
+    splitData: {
+      music: [
+        { name: "Drake", percentage: 50 },
+        { name: "21 Savage", percentage: 50 }
+      ],
+      lyrics: [
+        { name: "Drake", percentage: 55 },
+        { name: "21 Savage", percentage: 45 }
+      ],
+      instruments: [
+        { name: "Producer", percentage: 35 },
+        { name: "Audio Engineer", percentage: 25 },
+        { name: "Vocals (Drake)", percentage: 20 },
+        { name: "Vocals (21 Savage)", percentage: 20 }
+      ]
+    }
+  }
+];
+
+async function copyInitialSongCatalog(userId: number) {
+  try {
+    console.log("Copying initial song catalog for user:", userId);
+    for (const songData of INITIAL_SONGS) {
+      await storage.createSong({
+        ...songData,
+        userId
+      });
+    }
+    console.log("Successfully copied song catalog");
+  } catch (error) {
+    console.error("Error copying song catalog:", error);
+    throw error;
+  }
+}
+
 export function setupAuth(app: Express) {
   const sessionSecret = process.env.SESSION_SECRET || 'dev_session_secret_key_123';
 
@@ -106,18 +189,14 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ message: "Username already exists" });
       }
 
-      // Create a test user with password "password123"
-      const hashedPassword = await hashPassword("password123");
+      const hashedPassword = await hashPassword(req.body.password);
       const user = await storage.createUser({
         ...req.body,
-        username: "drake",
         password: hashedPassword,
-        legalFirstName: "Aubrey",
-        legalLastName: "Graham",
-        artistName: "Drake",
-        songwriterName: "Drake",
-        spotifyArtistLink: "https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4"
       });
+
+      // Copy initial song catalog for the new user
+      await copyInitialSongCatalog(user.id);
 
       req.login(user, (err) => {
         if (err) return next(err);
