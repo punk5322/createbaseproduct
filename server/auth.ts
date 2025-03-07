@@ -85,6 +85,9 @@ export function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
+      // Add logging to debug registration
+      console.log("Registration attempt:", req.body.username);
+
       const existingUser = await storage.getUserByUsername(req.body.username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
@@ -101,11 +104,15 @@ export function setupAuth(app: Express) {
         res.status(201).json(user);
       });
     } catch (error: any) {
+      console.error("Registration error:", error);
       next(error);
     }
   });
 
   app.post("/api/login", (req, res, next) => {
+    // Add logging to debug login
+    console.log("Login attempt:", req.body.username);
+
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
       if (!user) {
