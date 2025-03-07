@@ -1,128 +1,47 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Song } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SongTable from "@/components/song-table";
-import { Loader2, LogOut } from "lucide-react";
+import { Loader2, LogOut, Search } from "lucide-react";
 import AddSongSheet from "@/components/add-song-sheet";
 import { Logo } from "@/components/ui/logo";
-
-// Mock data for initial catalog
-const INITIAL_SONGS: Song[] = [
-  {
-    id: 1,
-    userId: 1,
-    title: "Rich Flex",
-    artist: "Drake & 21 Savage",
-    status: "claimed",
-    splitData: {
-      music: [
-        { name: "Drake", percentage: 50 },
-        { name: "21 Savage", percentage: 50 }
-      ],
-      lyrics: [
-        { name: "Drake", percentage: 50 },
-        { name: "21 Savage", percentage: 50 }
-      ],
-      instruments: [
-        { name: "40", percentage: 25 },
-        { name: "Tay Keith", percentage: 25 },
-        { name: "Vinylz", percentage: 25 },
-        { name: "Conductor", percentage: 25 }
-      ]
-    }
-  },
-  {
-    id: 2,
-    userId: 1,
-    title: "Jimmy Cooks",
-    artist: "Drake ft. 21 Savage",
-    status: "claimed",
-    splitData: {
-      music: [
-        { name: "Drake", percentage: 60 },
-        { name: "21 Savage", percentage: 40 }
-      ],
-      lyrics: [
-        { name: "Drake", percentage: 60 },
-        { name: "21 Savage", percentage: 40 }
-      ],
-      instruments: [
-        { name: "Tay Keith", percentage: 50 },
-        { name: "40", percentage: 50 }
-      ]
-    }
-  },
-  {
-    id: 3,
-    userId: 1,
-    title: "Money In The Grave",
-    artist: "Drake ft. Rick Ross",
-    status: "unclaimed",
-    splitData: {
-      music: [
-        { name: "Drake", percentage: 70 },
-        { name: "Rick Ross", percentage: 30 }
-      ],
-      lyrics: [
-        { name: "Drake", percentage: 70 },
-        { name: "Rick Ross", percentage: 30 }
-      ],
-      instruments: [
-        { name: "40", percentage: 40 },
-        { name: "Cardo", percentage: 40 },
-        { name: "Engineer", percentage: 20 }
-      ]
-    }
-  },
-  {
-    id: 4,
-    userId: 1,
-    title: "Privileged Rappers",
-    artist: "Drake ft. 21 Savage",
-    status: "unclaimed",
-    splitData: {
-      music: [
-        { name: "Drake", percentage: 50 },
-        { name: "21 Savage", percentage: 50 }
-      ],
-      lyrics: [
-        { name: "Drake", percentage: 50 },
-        { name: "21 Savage", percentage: 50 }
-      ],
-      instruments: [
-        { name: "Audio Engineer 1", percentage: 25 },
-        { name: "Audio Engineer 2", percentage: 25 },
-        { name: "Producer 1", percentage: 25 },
-        { name: "Producer 2", percentage: 25 }
-      ]
-    }
-  }
-];
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"title" | "artist" | "status">("title");
 
   const {
-    data: songs = INITIAL_SONGS,
+    data: songs = [],
     isLoading,
     error,
   } = useQuery<Song[]>({
     queryKey: ["/api/songs"],
   });
 
+  const filteredAndSortedSongs = songs
+    .filter(song => 
+      song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      song.artist.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === "title") return a.title.localeCompare(b.title);
+      if (sortBy === "artist") return a.artist.localeCompare(b.artist);
+      return a.status.localeCompare(b.status);
+    });
+
   useEffect(() => {
     if (user) {
-      // First check payment status
       if (user.paymentStatus === "pending") {
         setLocation("/onboarding");
-      }
-      // Only check KYC if payment is completed
-      else if (user.paymentStatus === "completed" && user.kycStatus === "pending") {
+      } else if (user.paymentStatus === "completed" && user.kycStatus === "pending") {
         setLocation("/kyc");
       }
     }
@@ -147,12 +66,12 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-start mb-8">
           <div className="flex items-center gap-4">
             <Logo />
             <div>
-              <h1 className="text-3xl font-bold">Welcome, {user?.artistName}</h1>
-              <p className="text-muted-foreground">
+              <h2 className="text-xl font-medium">Welcome, {user?.artistName}</h2>
+              <p className="text-sm text-muted-foreground">
                 Manage your music catalog and royalties
               </p>
             </div>
@@ -206,9 +125,30 @@ export default function HomePage() {
         <Card>
           <CardHeader>
             <CardTitle>Song Catalog</CardTitle>
+            <div className="flex gap-4 mt-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Search songs by title or artist..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full"
+                  icon={<Search className="h-4 w-4" />}
+                />
+              </div>
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Sort by..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="title">Sort by Title</SelectItem>
+                  <SelectItem value="artist">Sort by Artist</SelectItem>
+                  <SelectItem value="status">Sort by Status</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </CardHeader>
           <CardContent>
-            <SongTable songs={songs || []} />
+            <SongTable songs={filteredAndSortedSongs} />
           </CardContent>
         </Card>
       </div>
