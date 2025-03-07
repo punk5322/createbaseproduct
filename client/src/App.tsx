@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./lib/protected-route";
@@ -30,36 +30,58 @@ import PaymentsPage from "@/pages/payments";
 import SplitsPage from "@/pages/splits";
 
 function SidebarNav() {
+  const [location, setLocation] = useLocation();
+
   return (
     <Sidebar>
       <SidebarContent>
-        <div className="flex flex-col space-y-2 p-2">
+        <div className="flex flex-col space-y-1">
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Dashboard">
+            <SidebarMenuButton 
+              tooltip="Dashboard" 
+              onClick={() => setLocation("/dashboard")}
+              isActive={location === "/dashboard"}
+            >
               <Home className="h-4 w-4" />
               <span>Dashboard</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Reporting">
+            <SidebarMenuButton 
+              tooltip="Reporting" 
+              onClick={() => setLocation("/reporting")}
+              isActive={location === "/reporting"}
+            >
               <FileText className="h-4 w-4" />
               <span>Reporting</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Payments">
+            <SidebarMenuButton 
+              tooltip="Payments" 
+              onClick={() => setLocation("/payments")}
+              isActive={location === "/payments"}
+            >
               <DollarSign className="h-4 w-4" />
               <span>Payments</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Splits">
+            <SidebarMenuButton 
+              tooltip="Splits" 
+              onClick={() => setLocation("/splits")}
+              isActive={location === "/splits"}
+            >
               <Share2 className="h-4 w-4" />
               <span>Splits</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Settings">
+            <SidebarMenuButton 
+              tooltip="Settings" 
+              onClick={() => setLocation("/settings")}
+              isActive={location === "/settings"}
+            >
               <Settings className="h-4 w-4" />
               <span>Settings</span>
             </SidebarMenuButton>
