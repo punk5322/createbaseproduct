@@ -21,6 +21,13 @@ export function SongDetails({ song, isOpen, onClose }) {
     onClose();
   };
 
+  const defaultContributors = [
+    { name: "John Lennon", split: 40, proAffiliation: "ASCAP", publisher: "Northern Songs" },
+    { name: "Paul McCartney", split: 40, proAffiliation: "ASCAP", publisher: "Northern Songs" },
+    { name: "Camillo Felgen", split: 10, proAffiliation: "GEMA", publisher: "Sony Music" },
+    { name: "Heinz Hellmer", split: 10, proAffiliation: "GEMA", publisher: "Sony Music" }
+  ];
+
   return (
     <>
       <Sheet open={isOpen} onOpenChange={onClose}>
@@ -77,35 +84,33 @@ export function SongDetails({ song, isOpen, onClose }) {
             <DialogTitle>Edit Splits</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="space-y-4">
-              {song?.contributors?.map((contributor, index) => (
-                <div key={index} className="space-y-4 p-4 border rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <Label>{contributor.name}</Label>
-                      <div className="text-sm text-muted-foreground">Songwriter</div>
-                    </div>
-                    <Input 
-                      type="number" 
-                      value={contributor.split} 
-                      className="w-24" 
-                      min="0"
-                      max="100"
-                    />
+            {defaultContributors.map((contributor, index) => (
+              <div key={index} className="space-y-4 p-4 border rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label>{contributor.name}</Label>
+                    <div className="text-sm text-muted-foreground">Songwriter</div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-sm text-muted-foreground">PRO Affiliation</Label>
-                      <Input value={contributor.proAffiliation} />
-                    </div>
-                    <div>
-                      <Label className="text-sm text-muted-foreground">Publisher</Label>
-                      <Input value={contributor.publisher} />
-                    </div>
+                  <Input 
+                    type="number" 
+                    value={contributor.split} 
+                    className="w-24" 
+                    min="0"
+                    max="100"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm text-muted-foreground">PRO Affiliation</Label>
+                    <Input defaultValue={contributor.proAffiliation} />
+                  </div>
+                  <div>
+                    <Label className="text-sm text-muted-foreground">Publisher</Label>
+                    <Input defaultValue={contributor.publisher} />
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
             <Button 
               className="w-full"
               onClick={() => {
@@ -123,10 +128,13 @@ export function SongDetails({ song, isOpen, onClose }) {
       </Dialog>
 
       {/* Conditional Splits Modal */}
-      <Dialog open={conditionalSplitsOpen} onOpenChange={(open) => {
-        setConditionalSplitsOpen(open);
-        if (!open) setConditionalStep(1);
-      }}>
+      <Dialog 
+        open={conditionalSplitsOpen} 
+        onOpenChange={(open) => {
+          setConditionalSplitsOpen(open);
+          if (!open) setConditionalStep(1);
+        }}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
@@ -153,7 +161,6 @@ export function SongDetails({ song, isOpen, onClose }) {
                 <Button 
                   variant="outline" 
                   className="w-full justify-start px-4 py-6"
-                  onClick={() => setConditionalStep(2)}
                 >
                   Time-Based
                 </Button>
@@ -178,7 +185,7 @@ export function SongDetails({ song, isOpen, onClose }) {
             {conditionalStep === 3 && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  {song?.contributors?.map((contributor, index) => (
+                  {defaultContributors.map((contributor, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <Label>{contributor.name}</Label>
                       <Input type="number" className="w-24" placeholder="%" />
@@ -197,7 +204,7 @@ export function SongDetails({ song, isOpen, onClose }) {
             {conditionalStep === 4 && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  {song?.contributors?.map((contributor, index) => (
+                  {defaultContributors.map((contributor, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <Label>{contributor.name}</Label>
                       <Input type="number" className="w-24" placeholder="%" />
