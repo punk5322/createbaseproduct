@@ -50,10 +50,10 @@ export class MemStorage implements IStorage {
       this.users.set(user.id, user);
     });
 
-    this.currentUserId = Math.max(...Array.from(this.users.keys())) + 1;
+    this.currentUserId = Math.max(...Array.from(this.users.keys()), 0) + 1;
     this.currentSongId = 1;
     this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+      checkPeriod: 86400000, // 24 hours
     });
   }
 
@@ -63,18 +63,19 @@ export class MemStorage implements IStorage {
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
-      (user) => user.username === username,
+      (user) => user.username.toLowerCase() === username.toLowerCase(),
     );
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { 
-      ...insertUser, 
+    const user: User = {
+      ...insertUser,
       id,
       kycStatus: "pending",
       driverLicenseUrl: null,
-      paymentStatus: "pending"
+      paymentStatus: "pending",
+      spotifyArtistLink: insertUser.spotifyArtistLink || null,
     };
     this.users.set(id, user);
     return user;
