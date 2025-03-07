@@ -357,9 +357,14 @@ const SidebarHeader = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="header"
-      className={cn("flex flex-col gap-2 p-2", className)}
+      className={cn("flex flex-col gap-2 p-4", className)}
       {...props}
-    />
+    >
+      <div className="flex items-center gap-2">
+        <Logo className="w-8 h-8" /> {/* Assuming Logo component is defined elsewhere */}
+        <span className="text-lg font-semibold">CreateBase</span>
+      </div>
+    </div>
   )
 })
 SidebarHeader.displayName = "SidebarHeader"
@@ -511,7 +516,7 @@ const SidebarMenuItem = React.forwardRef<
 SidebarMenuItem.displayName = "SidebarMenuItem"
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full items-center gap-3 px-4 py-3 text-sm font-medium outline-none transition-all duration-200 ease-in-out hover:bg-accent/5 focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-accent/10 data-[active=true]:text-accent-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  "peer/menu-button flex w-full items-center gap-3 px-4 py-3 text-sm font-medium outline-none transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-accent/5 hover:to-transparent focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/10 data-[active=true]:to-transparent [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
