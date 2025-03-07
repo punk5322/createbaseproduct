@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Logo } from "@/components/ui/logo";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
@@ -64,6 +65,9 @@ export default function AuthPage() {
     <div className="min-h-screen bg-gray-50 flex">
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
+          <div className="mb-8">
+            <Logo className="mx-auto" />
+          </div>
           <Tabs defaultValue="login">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
@@ -254,7 +258,7 @@ export default function AuthPage() {
           <div className="absolute inset-0 flex items-center justify-center p-8">
             <div className="text-white max-w-lg">
               <h1 className="text-4xl font-bold mb-4">
-                Music Royalty Management
+                Music Royalty Management with CreateBase
               </h1>
               <p className="text-lg text-gray-300">
                 Take control of your music catalog and manage your royalties with

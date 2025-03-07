@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SongTable from "@/components/song-table";
 import { Loader2, LogOut } from "lucide-react";
 import AddSongSheet from "@/components/add-song-sheet";
+import { Logo } from "@/components/ui/logo";
 
 // Mock data for initial catalog
 const INITIAL_SONGS: Song[] = [
@@ -147,16 +148,19 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Welcome, {user?.artistName}</h1>
-            <p className="text-muted-foreground">
-              Manage your music catalog and royalties
-            </p>
+          <div className="flex items-center gap-4">
+            <Logo />
+            <div>
+              <h1 className="text-3xl font-bold">Welcome, {user?.artistName}</h1>
+              <p className="text-muted-foreground">
+                Manage your music catalog and royalties
+              </p>
+            </div>
           </div>
           <div className="flex gap-4">
             <AddSongSheet />
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => logoutMutation.mutate()}
               disabled={logoutMutation.isPending}
             >
