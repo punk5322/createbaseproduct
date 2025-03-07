@@ -3,9 +3,10 @@ import React from "react";
 export function Logo({ className = "" }: { className?: string }) {
   return (
     <img 
-      src="/assets/CreateBase-WORDMARK-02.png"
+      src="/attached_assets/CreateBase-WORDMARK-02.png"
       alt="CreateBase"
-      className={`h-8 ${className}`}
+      className={`h-12 w-auto ${className}`}
+      style={{ maxWidth: '200px' }}
     />
   );
 }

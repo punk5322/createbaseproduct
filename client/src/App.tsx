@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
 import HomePage from "@/pages/home-page";
+import LandingPage from "@/pages/landing";
+import AddSongPage from "@/pages/add-song";
 import OnboardingPage from "@/pages/onboarding";
 import KYCPage from "@/pages/kyc";
 import PaymentPage from "@/pages/payment";
@@ -18,7 +20,9 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={HomePage} />
+      <ProtectedRoute path="/" component={LandingPage} />
+      <ProtectedRoute path="/dashboard" component={HomePage} />
+      <ProtectedRoute path="/add-song" component={AddSongPage} />
       <ProtectedRoute path="/how-it-works" component={HowItWorksPage} />
       <ProtectedRoute path="/payment" component={PaymentPage} />
       <ProtectedRoute path="/eula" component={EULAPage} />
