@@ -21,10 +21,15 @@ export default function HomePage() {
   });
 
   useEffect(() => {
-    if (user && user.kycStatus === "pending") {
-      setLocation("/kyc");
-    } else if (user && user.paymentStatus === "pending") {
-      setLocation("/onboarding");
+    if (user) {
+      // First check payment status
+      if (user.paymentStatus === "pending") {
+        setLocation("/onboarding");
+      }
+      // Only check KYC if payment is completed
+      else if (user.paymentStatus === "completed" && user.kycStatus === "pending") {
+        setLocation("/kyc");
+      }
     }
   }, [user, setLocation]);
 
