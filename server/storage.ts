@@ -99,9 +99,9 @@ export class DatabaseStorage implements IStorage {
   async getSongs(userId: number): Promise<Song[]> {
     try {
       console.log("Fetching songs for user:", userId);
-      const songs = await db.select().from(songs).where(eq(songs.userId, userId));
-      console.log("Songs found:", songs.length);
-      return songs;
+      const userSongs = await db.select().from(songs).where(eq(songs.userId, userId));
+      console.log("Songs found:", userSongs.length);
+      return userSongs;
     } catch (error) {
       console.error("Error fetching songs:", error);
       throw error;
