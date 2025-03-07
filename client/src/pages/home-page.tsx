@@ -7,13 +7,84 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SongTable from "@/components/song-table";
 import { Loader2, LogOut } from "lucide-react";
+import AddSongSheet from "@/components/add-song-sheet";
+
+// Mock data for initial catalog
+const INITIAL_SONGS: Song[] = [
+  {
+    id: 1,
+    userId: 1,
+    title: "Rich Flex",
+    artist: "Drake & 21 Savage",
+    status: "claimed",
+    splitData: {
+      music: [
+        { name: "Drake", percentage: 50 },
+        { name: "21 Savage", percentage: 50 }
+      ],
+      lyrics: [
+        { name: "Drake", percentage: 50 },
+        { name: "21 Savage", percentage: 50 }
+      ],
+      instruments: [
+        { name: "40", percentage: 25 },
+        { name: "Tay Keith", percentage: 25 },
+        { name: "Vinylz", percentage: 25 },
+        { name: "Conductor", percentage: 25 }
+      ]
+    }
+  },
+  {
+    id: 2,
+    userId: 1,
+    title: "Jimmy Cooks",
+    artist: "Drake ft. 21 Savage",
+    status: "claimed",
+    splitData: {
+      music: [
+        { name: "Drake", percentage: 60 },
+        { name: "21 Savage", percentage: 40 }
+      ],
+      lyrics: [
+        { name: "Drake", percentage: 60 },
+        { name: "21 Savage", percentage: 40 }
+      ],
+      instruments: [
+        { name: "Tay Keith", percentage: 50 },
+        { name: "40", percentage: 50 }
+      ]
+    }
+  },
+  {
+    id: 3,
+    userId: 1,
+    title: "Money In The Grave",
+    artist: "Drake ft. Rick Ross",
+    status: "unclaimed",
+    splitData: {
+      music: [
+        { name: "Drake", percentage: 70 },
+        { name: "Rick Ross", percentage: 30 }
+      ],
+      lyrics: [
+        { name: "Drake", percentage: 70 },
+        { name: "Rick Ross", percentage: 30 }
+      ],
+      instruments: [
+        { name: "40", percentage: 40 },
+        { name: "Cardo", percentage: 40 },
+        { name: "Engineer", percentage: 20 }
+      ]
+    }
+  }
+];
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
 
   const {
-    data: songs,
+    data: songs = INITIAL_SONGS,
     isLoading,
     error,
   } = useQuery<Song[]>({
@@ -60,7 +131,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="flex gap-4">
-            <Button onClick={() => setLocation("/onboarding")}>Add Songs</Button>
+            <AddSongSheet />
             <Button 
               variant="outline" 
               onClick={() => logoutMutation.mutate()}
@@ -92,12 +163,12 @@ export default function HomePage() {
               <CardTitle>Pending Royalties</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">$0.00</p>
+              <p className="text-3xl font-bold">$42,150.00</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Account Status</CardTitle>
+              <CardTitle>Claim Status</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold capitalize">{user?.kycStatus}</p>
