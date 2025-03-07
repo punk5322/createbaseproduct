@@ -76,6 +76,29 @@ const INITIAL_SONGS: Song[] = [
         { name: "Engineer", percentage: 20 }
       ]
     }
+  },
+  {
+    id: 4,
+    userId: 1,
+    title: "Privileged Rappers",
+    artist: "Drake ft. 21 Savage",
+    status: "unclaimed",
+    splitData: {
+      music: [
+        { name: "Drake", percentage: 50 },
+        { name: "21 Savage", percentage: 50 }
+      ],
+      lyrics: [
+        { name: "Drake", percentage: 50 },
+        { name: "21 Savage", percentage: 50 }
+      ],
+      instruments: [
+        { name: "Audio Engineer 1", percentage: 25 },
+        { name: "Audio Engineer 2", percentage: 25 },
+        { name: "Producer 1", percentage: 25 },
+        { name: "Producer 2", percentage: 25 }
+      ]
+    }
   }
 ];
 
