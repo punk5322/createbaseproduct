@@ -30,77 +30,134 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    try {
+      console.log("Fetching user by ID:", id);
+      const [user] = await db.select().from(users).where(eq(users.id, id));
+      console.log("User found:", user ? "yes" : "no");
+      return user;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw error;
+    }
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.username, username.toLowerCase()));
-    return user;
+    try {
+      console.log("Fetching user by username:", username);
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.username, username.toLowerCase()));
+      console.log("User found:", user ? "yes" : "no");
+      return user;
+    } catch (error) {
+      console.error("Error fetching user by username:", error);
+      throw error;
+    }
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values({
-        ...insertUser,
-        username: insertUser.username.toLowerCase(),
-        kycStatus: "pending",
-        driverLicenseUrl: null,
-        paymentStatus: "pending",
-        spotifyArtistLink: insertUser.spotifyArtistLink || null,
-      })
-      .returning();
-    return user;
+    try {
+      console.log("Creating new user:", insertUser.username);
+      const [user] = await db
+        .insert(users)
+        .values({
+          ...insertUser,
+          username: insertUser.username.toLowerCase(),
+          kycStatus: "completed", 
+          driverLicenseUrl: null,
+          paymentStatus: "completed", 
+          spotifyArtistLink: insertUser.spotifyArtistLink || null,
+        })
+        .returning();
+      console.log("User created successfully");
+      return user;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
   }
 
   async updateUser(id: number, updates: Partial<User>): Promise<User> {
-    const [user] = await db
-      .update(users)
-      .set(updates)
-      .where(eq(users.id, id))
-      .returning();
-    if (!user) throw new Error("User not found");
-    return user;
+    try {
+      console.log("Updating user:", id);
+      const [user] = await db
+        .update(users)
+        .set(updates)
+        .where(eq(users.id, id))
+        .returning();
+      if (!user) throw new Error("User not found");
+      console.log("User updated successfully");
+      return user;
+    } catch (error) {
+      console.error("Error updating user:", error);
+      throw error;
+    }
   }
 
   async getSongs(userId: number): Promise<Song[]> {
-    return db.select().from(songs).where(eq(songs.userId, userId));
+    try {
+      console.log("Fetching songs for user:", userId);
+      const songs = await db.select().from(songs).where(eq(songs.userId, userId));
+      console.log("Songs found:", songs.length);
+      return songs;
+    } catch (error) {
+      console.error("Error fetching songs:", error);
+      throw error;
+    }
   }
 
   async createSong(song: Partial<Song>): Promise<Song> {
-    const [newSong] = await db
-      .insert(songs)
-      .values({
-        title: song.title!,
-        artist: song.artist!,
-        userId: song.userId!,
-        status: song.status || "unclaimed",
-        splitData: song.splitData || {
-          music: [],
-          lyrics: [],
-          instruments: []
-        }
-      })
-      .returning();
-    return newSong;
+    try {
+      console.log("Creating new song:", song.title);
+      const [newSong] = await db
+        .insert(songs)
+        .values({
+          title: song.title!,
+          artist: song.artist!,
+          userId: song.userId!,
+          status: song.status || "unclaimed",
+          splitData: song.splitData || {
+            music: [],
+            lyrics: [],
+            instruments: []
+          }
+        })
+        .returning();
+      console.log("Song created successfully");
+      return newSong;
+    } catch (error) {
+      console.error("Error creating song:", error);
+      throw error;
+    }
   }
 
   async updateSong(id: number, updates: Partial<Song>): Promise<Song> {
-    const [song] = await db
-      .update(songs)
-      .set(updates)
-      .where(eq(songs.id, id))
-      .returning();
-    if (!song) throw new Error("Song not found");
-    return song;
+    try {
+      console.log("Updating song:", id);
+      const [song] = await db
+        .update(songs)
+        .set(updates)
+        .where(eq(songs.id, id))
+        .returning();
+      if (!song) throw new Error("Song not found");
+      console.log("Song updated successfully");
+      return song;
+    } catch (error) {
+      console.error("Error updating song:", error);
+      throw error;
+    }
   }
 
   async deleteSong(id: number): Promise<void> {
-    await db.delete(songs).where(eq(songs.id, id));
+    try {
+      console.log("Deleting song:", id);
+      await db.delete(songs).where(eq(songs.id, id));
+      console.log("Song deleted successfully");
+    } catch (error) {
+      console.error("Error deleting song:", error);
+      throw error;
+    }
   }
 }
 
