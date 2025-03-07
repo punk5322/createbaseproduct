@@ -14,6 +14,12 @@ export default function LandingPage() {
     return null;
   }
 
+  // Don't show landing page for new users or incomplete onboarding
+  if (user.isNewUser || user.paymentStatus === "pending" || user.kycStatus === "pending") {
+    setLocation("/how-it-works");
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
@@ -40,16 +46,16 @@ export default function LandingPage() {
               </CardContent>
             </Card>
             <Card className="hover:bg-accent/50 cursor-pointer transition-colors"
-                  onClick={() => setLocation("/catalog")}>
+                  onClick={() => setLocation("/dashboard")}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Library className="h-5 w-5" />
-                  View Catalog
+                  View Dashboard
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Access your existing song catalog and manage royalty distributions
+                  Access your song catalog and manage royalty distributions
                 </p>
               </CardContent>
             </Card>

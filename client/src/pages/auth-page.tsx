@@ -34,8 +34,10 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (user) {
-      if (user.paymentStatus === "pending") {
+      if (user.isNewUser) {
         setLocation("/how-it-works");
+      } else if (user.paymentStatus === "pending") {
+        setLocation("/payment");
       } else if (user.kycStatus === "pending") {
         setLocation("/kyc");
       } else {

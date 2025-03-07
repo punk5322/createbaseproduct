@@ -7,6 +7,8 @@ import { Logo } from "@/components/ui/logo";
 import { Loader2, Send, Music } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 type Message = {
   role: "assistant" | "user";
@@ -19,17 +21,37 @@ const INITIAL_MESSAGE = `Hi! I'll help you add your song to CreateBase. Let's st
 export default function AddSongPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: INITIAL_MESSAGE }
   ]);
   const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [showAddToCatalog, setShowAddToCatalog] = useState(false);
+  const [songData, setSongData] = useState<any>(null);
 
   if (!user) {
     setLocation("/auth");
     return null;
   }
+
+  const handleAddToCatalog = async () => {
+    try {
+      await apiRequest("POST", "/api/songs", songData);
+      toast({
+        title: "Success",
+        description: "Song added to your catalog",
+      });
+      setLocation("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   const mockAIResponse = async (userMessage: string) => {
     setIsProcessing(true);
@@ -39,10 +61,12 @@ export default function AddSongPage() {
     switch (currentStep) {
       case 1:
         response = `Great! And who are the artists performing "${userMessage}"?`;
+        setSongData({ title: userMessage });
         setCurrentStep(2);
         break;
       case 2:
         response = "Does this song contain any samples or interpolations from other songs?";
+        setSongData(prev => ({ ...prev, artist: userMessage }));
         setCurrentStep(3);
         break;
       case 3:
@@ -83,14 +107,21 @@ export default function AddSongPage() {
           response = "Please specify the adjustments you'd like to make to the splits:";
           setCurrentStep(8);
         } else {
-          response = "Great! I'll add this song to your catalog now. Click the button below to confirm.";
+          response = "Great! Are you done with adding this song?";
           setCurrentStep(9);
         }
         break;
+      case 9:
+        if (userMessage.toLowerCase().includes("yes") || userMessage.toLowerCase().includes("done")) {
+          response = "Perfect! Click the 'Add to Catalog' button below to save this song.";
+          setShowAddToCatalog(true);
+        } else {
+          response = "What else would you like to modify?";
+          setCurrentStep(7);
+        }
+        break;
       default:
-        response = "Song has been added to your catalog successfully!";
-        // Here we would normally save the song data
-        setLocation("/dashboard");
+        response = "I didn't understand that. Please try again.";
     }
 
     setMessages(prev => [
@@ -156,12 +187,20 @@ export default function AddSongPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your response..."
-                disabled={isProcessing}
+                disabled={isProcessing || showAddToCatalog}
               />
-              <Button type="submit" disabled={isProcessing}>
+              <Button type="submit" disabled={isProcessing || showAddToCatalog}>
                 <Send className="h-4 w-4" />
               </Button>
             </form>
+            {showAddToCatalog && (
+              <Button
+                onClick={handleAddToCatalog}
+                className="w-full mt-4"
+              >
+                Add to Catalog
+              </Button>
+            )}
           </CardContent>
         </Card>
       </div>
