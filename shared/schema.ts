@@ -14,6 +14,7 @@ export const users = pgTable("users", {
   kycStatus: text("kyc_status").default("pending"),
   driverLicenseUrl: text("driver_license_url"),
   paymentStatus: text("payment_status").default("pending"),
+  isNewUser: boolean("is_new_user").default(true),
 });
 
 export const songs = pgTable("songs", {

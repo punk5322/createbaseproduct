@@ -6,6 +6,23 @@ import { setupAuth } from "./auth";
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
 
+  app.put("/api/user", async (req, res) => {
+    try {
+      if (!req.user) {
+        console.log("User update attempt without authentication");
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      console.log("Updating user:", req.user.id, "Data:", req.body);
+      const user = await storage.updateUser(req.user.id, req.body);
+      console.log("User updated successfully");
+      res.json(user);
+    } catch (error: any) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   app.post("/api/payment", async (req, res) => {
     try {
       if (!req.user) {

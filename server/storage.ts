@@ -64,10 +64,11 @@ export class DatabaseStorage implements IStorage {
         .values({
           ...insertUser,
           username: insertUser.username.toLowerCase(),
-          kycStatus: "completed", 
+          kycStatus: "pending",
           driverLicenseUrl: null,
-          paymentStatus: "completed", 
+          paymentStatus: "pending",
           spotifyArtistLink: insertUser.spotifyArtistLink || null,
+          isNewUser: true,
         })
         .returning();
       console.log("User created successfully");
