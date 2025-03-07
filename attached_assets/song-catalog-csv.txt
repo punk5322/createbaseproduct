@@ -1,0 +1,72 @@
+Title,Artist,Split_Type,Contributor,Split_Percentage,Status
+"Privileged Rappers",Drake & 21 Savage,Music,Drake,50,Claimed
+"Privileged Rappers",Drake & 21 Savage,Music,21 Savage,50,Claimed
+"Privileged Rappers",Drake & 21 Savage,Lyrics,Drake,50,Claimed
+"Privileged Rappers",Drake & 21 Savage,Lyrics,21 Savage,50,Claimed
+"Privileged Rappers",Drake & 21 Savage,Instruments,Vocals (Drake),25,Claimed
+"Privileged Rappers",Drake & 21 Savage,Instruments,Vocals (21 Savage),25,Claimed
+"Privileged Rappers",Drake & 21 Savage,Instruments,Audio Engineer,25,Unclaimed
+"Privileged Rappers",Drake & 21 Savage,Instruments,Producer,25,Claimed
+"Money In The Grave",Drake & Rick Ross,Music,Drake,60,Claimed
+"Money In The Grave",Drake & Rick Ross,Music,Rick Ross,40,Claimed
+"Money In The Grave",Drake & Rick Ross,Lyrics,Drake,70,Claimed
+"Money In The Grave",Drake & Rick Ross,Lyrics,Rick Ross,30,Claimed
+"Money In The Grave",Drake & Rick Ross,Instruments,Producer,50,Claimed
+"Money In The Grave",Drake & Rick Ross,Instruments,Audio Engineer,30,Claimed
+"Money In The Grave",Drake & Rick Ross,Instruments,Vocals (Drake),10,Claimed
+"Money In The Grave",Drake & Rick Ross,Instruments,Vocals (Rick Ross),10,Claimed
+"Fair Trade",Drake & Travis Scott,Music,Drake,50,Claimed
+"Fair Trade",Drake & Travis Scott,Music,Travis Scott,50,Claimed
+"Fair Trade",Drake & Travis Scott,Lyrics,Drake,60,Claimed
+"Fair Trade",Drake & Travis Scott,Lyrics,Travis Scott,40,Claimed
+"Fair Trade",Drake & Travis Scott,Instruments,Producer,40,Claimed
+"Fair Trade",Drake & Travis Scott,Instruments,Audio Engineer,20,Intermediate
+"Fair Trade",Drake & Travis Scott,Instruments,Vocals (Drake),20,Claimed
+"Fair Trade",Drake & Travis Scott,Instruments,Vocals (Travis Scott),20,Claimed
+"Rich Flex",Drake & 21 Savage,Music,Drake,50,Claimed
+"Rich Flex",Drake & 21 Savage,Music,21 Savage,50,Claimed
+"Rich Flex",Drake & 21 Savage,Lyrics,Drake,55,Claimed
+"Rich Flex",Drake & 21 Savage,Lyrics,21 Savage,45,Claimed
+"Rich Flex",Drake & 21 Savage,Instruments,Producer,35,Claimed
+"Rich Flex",Drake & 21 Savage,Instruments,Audio Engineer,25,Claimed
+"Rich Flex",Drake & 21 Savage,Instruments,Vocals (Drake),20,Claimed
+"Rich Flex",Drake & 21 Savage,Instruments,Vocals (21 Savage),20,Claimed
+"TSU",Drake,Music,Drake,100,Claimed
+"TSU",Drake,Lyrics,Drake,100,Claimed
+"TSU",Drake,Instruments,Producer,40,Claimed
+"TSU",Drake,Instruments,Audio Engineer,30,Claimed
+"TSU",Drake,Instruments,Vocals (Drake),30,Claimed
+"No Friends In The Industry",Drake,Music,Drake,100,Claimed
+"No Friends In The Industry",Drake,Lyrics,Drake,100,Claimed
+"No Friends In The Industry",Drake,Instruments,Producer,45,Claimed
+"No Friends In The Industry",Drake,Instruments,Audio Engineer,30,Unclaimed
+"No Friends In The Industry",Drake,Instruments,Vocals (Drake),25,Claimed
+"Falling Back",Drake,Music,Drake,100,Claimed
+"Falling Back",Drake,Lyrics,Drake,100,Claimed
+"Falling Back",Drake,Instruments,Producer,50,Claimed
+"Falling Back",Drake,Instruments,Audio Engineer,25,Intermediate
+"Falling Back",Drake,Instruments,Vocals (Drake),25,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Music,Drake,34,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Music,Future,33,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Music,Young Thug,33,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Lyrics,Drake,34,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Lyrics,Future,33,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Lyrics,Young Thug,33,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Instruments,Producer,40,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Instruments,Audio Engineer,20,Unclaimed
+"Way 2 Sexy",Drake & Future & Young Thug,Instruments,Vocals (Drake),15,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Instruments,Vocals (Future),15,Claimed
+"Way 2 Sexy",Drake & Future & Young Thug,Instruments,Vocals (Young Thug),10,Claimed
+"Middle of the Ocean",Drake,Music,Drake,100,Claimed
+"Middle of the Ocean",Drake,Lyrics,Drake,100,Claimed
+"Middle of the Ocean",Drake,Instruments,Producer,50,Claimed
+"Middle of the Ocean",Drake,Instruments,Audio Engineer,25,Intermediate
+"Middle of the Ocean",Drake,Instruments,Vocals (Drake),25,Claimed
+"First Person Shooter",Drake & J. Cole,Music,Drake,50,Claimed
+"First Person Shooter",Drake & J. Cole,Music,J. Cole,50,Claimed
+"First Person Shooter",Drake & J. Cole,Lyrics,Drake,50,Claimed
+"First Person Shooter",Drake & J. Cole,Lyrics,J. Cole,50,Claimed
+"First Person Shooter",Drake & J. Cole,Instruments,Producer,35,Claimed
+"First Person Shooter",Drake & J. Cole,Instruments,Audio Engineer,25,Claimed
+"First Person Shooter",Drake & J. Cole,Instruments,Vocals (Drake),20,Claimed
+"First Person Shooter",Drake & J. Cole,Instruments,Vocals (J. Cole),20,Claimed

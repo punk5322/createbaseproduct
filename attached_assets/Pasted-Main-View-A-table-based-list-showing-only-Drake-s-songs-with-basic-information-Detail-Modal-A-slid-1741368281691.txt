@@ -1,0 +1,111 @@
+Main View: A table-based list showing only Drake's songs with basic information
+Detail Modal: A slide-over modal that appears when a song is selected, displaying comprehensive split information with visual representation
+
+Data Structure
+I'll provide a CSV file with the following structure:
+
+Title: Song title
+Artist: Main credited artists
+Split_Type: Category of contribution (Music, Lyrics, Instruments)
+Contributor: Specific person or role responsible
+Split_Percentage: Percentage allocation
+Status: Claimed/Unclaimed/Intermediate
+
+Main View Requirements
+
+Create a clean, minimal table displaying Drake's song catalog
+Table columns should include:
+
+Song Number/Position
+Title
+Featured Artists (if any)
+Album/Collection
+
+
+Only show one entry per song (not separate rows for each split)
+Use a simple black, white, and blue color scheme
+Include a search/filter functionality to find songs quickly
+Songs should be clickable to open the detail modal
+
+Detail Modal Requirements
+
+Create a slide-over modal that appears when a song is selected
+Modal header should display:
+
+Song title
+Main artists
+Album/collection
+
+
+Main modal content should include:
+
+Song Information: Show title, all artists, and overall status
+Split Visualization: Create three horizontal stacked bar charts for:
+
+Music Rights: Show percentage splits between contributors
+Lyrics Rights: Show percentage splits between contributors
+Instruments/Production: Show percentage splits between contributors
+
+
+Use different shades of blue to represent different contributors in the bars
+Include a small legend identifying each contributor
+Display the percentage number within each section of the bar when space permits
+Show the status (Claimed/Unclaimed/Intermediate) for each split with a small indicator
+
+
+Modal footer should have two buttons:
+
+"Edit Splits" button
+"Delete Song" button (with confirmation dialog)
+
+
+
+Visual Design
+
+Use a minimalist design with plenty of white space
+Color scheme: Black text, white background, blue accents and visualization bars
+Use different shades of blue for the split visualization sections
+Make the interface responsive for different screen sizes
+Use clean, readable typography
+
+Technical Requirements
+
+Build using React or a similar modern framework
+Parse the provided CSV for data management
+Include proper error handling and loading states
+Ensure all percentage splits for each Split_Type category always add up to 100%
+Make the UI interactive with smooth transitions for the modal
+
+Sample Visualization Example
+For example, if "Privileged Rappers" is selected:
+
+Music Rights Bar:
+
+Drake: 50% (medium blue)
+21 Savage: 50% (light blue)
+
+
+Lyrics Rights Bar:
+
+Drake: 50% (medium blue)
+21 Savage: 50% (light blue)
+
+
+Instruments Bar:
+
+Vocals (Drake): 25% (darkest blue)
+Vocals (21 Savage): 25% (dark blue)
+Audio Engineer: 25% (medium blue) - marked as "Unclaimed"
+Producer: 25% (light blue)
+
+
+
+Each section of the bar should be visually proportional to the percentage and include the contributor name and percentage when hovered.
+Additional Features (if time permits)
+
+Add ability to create new songs and splits
+Include a summary dashboard showing Drake's overall share across the catalog
+Add filtering by split status (to quickly see unclaimed splits)
+Include animation for the modal transitions and bar loading
+
+The application should be intuitive to use and provide clear visual representation of complex split data, while maintaining a clean, professional appearance.
