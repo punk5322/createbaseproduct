@@ -8,10 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   SidebarProvider,
   Sidebar,
-  SidebarContent,
   SidebarInset,
-  SidebarMenuItem,
-  SidebarMenuButton
 } from "@/components/ui/sidebar";
 
 import NotFound from "@/pages/not-found";
@@ -29,6 +26,31 @@ import SettingsPage from "@/pages/settings";
 import PaymentsPage from "@/pages/payments";
 import SplitsPage from "@/pages/splits";
 
+function MainLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      <Sidebar />
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
+  );
+}
+
+function ProtectedPages() {
+  return (
+    <MainLayout>
+      <Switch>
+        <Route path="/dashboard" component={HomePage} />
+        <Route path="/reporting" component={ReportingPage} />
+        <Route path="/settings" component={SettingsPage} />
+        <Route path="/payments" component={PaymentsPage} />
+        <Route path="/splits" component={SplitsPage} />
+        <Route>
+          <Redirect to="/dashboard" />
+        </Route>
+      </Switch>
+    </MainLayout>
+  );
+}
 
 function Router() {
   return (
@@ -39,11 +61,11 @@ function Router() {
       <ProtectedRoute path="/payment" component={PaymentPage} />
       <ProtectedRoute path="/eula" component={EULAPage} />
       <ProtectedRoute path="/kyc" component={KYCPage} />
-      <ProtectedRoute path="/dashboard" component={HomePage} />
-      <ProtectedRoute path="/reporting" component={ReportingPage} />
-      <ProtectedRoute path="/settings" component={SettingsPage} />
-      <ProtectedRoute path="/payments" component={PaymentsPage} />
-      <ProtectedRoute path="/splits" component={SplitsPage} />
+      <ProtectedRoute path="/dashboard" component={ProtectedPages} />
+      <ProtectedRoute path="/reporting" component={ProtectedPages} />
+      <ProtectedRoute path="/settings" component={ProtectedPages} />
+      <ProtectedRoute path="/payments" component={ProtectedPages} />
+      <ProtectedRoute path="/splits" component={ProtectedPages} />
       <Route path="/">
         <Redirect to="/dashboard" />
       </Route>
