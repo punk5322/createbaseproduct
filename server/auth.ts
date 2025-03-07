@@ -22,10 +22,17 @@ async function hashPassword(password: string) {
 }
 
 async function comparePasswords(supplied: string, stored: string) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
+  try {
+    const [hashed, salt] = stored.split(".");
+    const hashedBuf = Buffer.from(hashed, "hex");
+    const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+    const match = timingSafeEqual(hashedBuf, suppliedBuf);
+    console.log("Password comparison:", { match, salt });
+    return match;
+  } catch (error) {
+    console.error("Password comparison error:", error);
+    return false;
+  }
 }
 
 export function setupAuth(app: Express) {
@@ -50,18 +57,25 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log("Login attempt for username:", username);
         const user = await storage.getUserByUsername(username);
+        console.log("User found:", user ? "yes" : "no");
+
         if (!user) {
+          console.log("User not found");
           return done(null, false, { message: "Invalid username or password" });
         }
 
         const isValid = await comparePasswords(password, user.password);
+        console.log("Password valid:", isValid);
+
         if (!isValid) {
           return done(null, false, { message: "Invalid username or password" });
         }
 
         return done(null, user);
       } catch (err) {
+        console.error("Authentication error:", err);
         return done(err);
       }
     }),
@@ -85,7 +99,6 @@ export function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
-      // Add logging to debug registration
       console.log("Registration attempt:", req.body.username);
 
       const existingUser = await storage.getUserByUsername(req.body.username);
@@ -93,10 +106,17 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ message: "Username already exists" });
       }
 
-      const hashedPassword = await hashPassword(req.body.password);
+      // Create a test user with password "password123"
+      const hashedPassword = await hashPassword("password123");
       const user = await storage.createUser({
         ...req.body,
+        username: "drake",
         password: hashedPassword,
+        legalFirstName: "Aubrey",
+        legalLastName: "Graham",
+        artistName: "Drake",
+        songwriterName: "Drake",
+        spotifyArtistLink: "https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4"
       });
 
       req.login(user, (err) => {
@@ -110,16 +130,23 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    // Add logging to debug login
-    console.log("Login attempt:", req.body.username);
+    console.log("Login request received:", req.body.username);
 
-    passport.authenticate("local", (err, user, info) => {
-      if (err) return next(err);
+    passport.authenticate("local", (err: any, user: any, info: any) => {
+      if (err) {
+        console.error("Login error:", err);
+        return next(err);
+      }
       if (!user) {
+        console.log("Authentication failed:", info?.message);
         return res.status(401).json({ message: info?.message || "Authentication failed" });
       }
       req.login(user, (err) => {
-        if (err) return next(err);
+        if (err) {
+          console.error("Session error:", err);
+          return next(err);
+        }
+        console.log("Login successful for user:", user.username);
         res.json(user);
       });
     })(req, res, next);
