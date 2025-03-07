@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { Button } from "./button";
 
 const navItems = [
-  { icon: Home, label: "Dashboard", href: "/" },
+  { icon: Home, label: "Dashboard", href: "/dashboard" },
   { icon: FileText, label: "Reporting", href: "/reporting" },
   { icon: DollarSign, label: "Payments", href: "/payments" },
   { icon: Split, label: "Splits", href: "/splits" },
