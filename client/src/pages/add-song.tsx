@@ -46,7 +46,11 @@ export default function AddSongPage() {
         setCurrentStep(3);
         break;
       case 3:
-        response = "Let's specify the splits. Who are the writers of this song?";
+        if (userMessage.toLowerCase().includes("yes")) {
+          response = "Please list the songs that were sampled, including artist and song title:";
+        } else {
+          response = "Let's specify the splits. Who are the writers of this song?";
+        }
         setCurrentStep(4);
         break;
       case 4:
@@ -54,13 +58,39 @@ export default function AddSongPage() {
         setCurrentStep(5);
         break;
       case 5:
-        response = `I've prepared a split sheet based on our conversation. Would you like to review it before adding to your catalog?`;
-        setCurrentStep(6);
+        if (userMessage.toLowerCase().includes("yes")) {
+          response = "Please list the additional contributors and their roles:";
+          setCurrentStep(6);
+        } else {
+          response = "I'll generate a split sheet based on our conversation. Here's what I've prepared:\n\n" +
+                    "Music: Writer 1 (50%), Writer 2 (50%)\n" +
+                    "Lyrics: Writer 1 (50%), Writer 2 (50%)\n" +
+                    "Production: Producer (100%)\n\n" +
+                    "Would you like to make any adjustments to these splits?";
+          setCurrentStep(7);
+        }
+        break;
+      case 6:
+        response = "I've updated the split sheet with the additional contributors:\n\n" +
+                  "Music: Writer 1 (40%), Writer 2 (40%)\n" +
+                  "Lyrics: Writer 1 (50%), Writer 2 (50%)\n" +
+                  "Production: Producer (80%), Engineer (20%)\n\n" +
+                  "Would you like to make any adjustments to these splits?";
+        setCurrentStep(7);
+        break;
+      case 7:
+        if (userMessage.toLowerCase().includes("yes")) {
+          response = "Please specify the adjustments you'd like to make to the splits:";
+          setCurrentStep(8);
+        } else {
+          response = "Great! I'll add this song to your catalog now. Click the button below to confirm.";
+          setCurrentStep(9);
+        }
         break;
       default:
-        response = "Great! I'll add this to your catalog now.";
+        response = "Song has been added to your catalog successfully!";
         // Here we would normally save the song data
-        setLocation("/catalog");
+        setLocation("/dashboard");
     }
 
     setMessages(prev => [
