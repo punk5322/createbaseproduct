@@ -35,7 +35,7 @@ function SidebarNav() {
   return (
     <Sidebar>
       <SidebarContent>
-        <div className="flex flex-col space-y-1">
+        <div className="flex flex-col pt-2">
           <SidebarMenuItem>
             <SidebarMenuButton 
               tooltip="Dashboard" 
