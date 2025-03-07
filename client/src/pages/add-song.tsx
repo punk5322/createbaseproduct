@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Logo } from "@/components/ui/logo";
+import { Header } from "@/components/ui/header";
 import { Loader2, Send, Music } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -143,10 +143,8 @@ export default function AddSongPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center mb-8">
-          <Logo />
-        </div>
         <Card className="max-w-3xl mx-auto">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
