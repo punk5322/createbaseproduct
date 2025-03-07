@@ -56,11 +56,11 @@ export default function SongTable({ songs }: SongTableProps) {
   });
 
   const calculateTotalSplits = (song: Song) => {
-    const splits = song.splitData;
+    if (!song.splitData) return 0;
     return (
-      splits?.music.length +
-      splits?.lyrics.length +
-      splits?.instruments.length || 0
+      song.splitData.music.length +
+      song.splitData.lyrics.length +
+      song.splitData.instruments.length
     );
   };
 
