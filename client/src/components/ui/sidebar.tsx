@@ -2,6 +2,7 @@ import { Home, FileText, DollarSign, Split, Settings } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
+import React from 'react';
 
 const navItems = [
   { icon: Home, label: "Dashboard", href: "/" },
@@ -20,30 +21,44 @@ export function Sidebar() {
         <Logo />
       </div>
 
-      <nav className="flex-1 p-4">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = location === item.href;
+      <div className="flex-1 overflow-y-auto">
+        <nav className="p-4">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location === item.href;
 
-          return (
-            <Link key={item.href} href={item.href}>
-              <a
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 mb-1 text-sm font-medium",
-                  "transition-colors duration-200 ease-in-out",
-                  "rounded-lg",
-                  "hover:bg-gradient-to-r hover:from-primary/5 hover:to-transparent",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
-                  isActive && "bg-gradient-to-r from-primary/10 to-transparent text-primary"
-                )}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </a>
-            </Link>
-          );
-        })}
-      </nav>
+            return (
+              <Link key={item.href} href={item.href}>
+                <a
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 mb-1 text-sm font-medium",
+                    "transition-colors duration-200 ease-in-out",
+                    "rounded-lg",
+                    "hover:bg-gradient-to-r hover:from-primary/5 hover:to-transparent",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                    isActive && "bg-gradient-to-r from-primary/10 to-transparent text-primary"
+                  )}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{item.label}</span>
+                </a>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </aside>
   );
 }
+
+// Export necessary components for compatibility
+export const SidebarContent = Sidebar;
+export const SidebarInset = ({ className, ...props }: React.HTMLProps<HTMLDivElement>) => (
+  <main
+    className={cn(
+      "ml-64 min-h-screen bg-background p-8",
+      className
+    )}
+    {...props}
+  />
+);
