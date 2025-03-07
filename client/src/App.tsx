@@ -10,13 +10,18 @@ import AuthPage from "@/pages/auth-page";
 import HomePage from "@/pages/home-page";
 import OnboardingPage from "@/pages/onboarding";
 import KYCPage from "@/pages/kyc";
+import PaymentPage from "@/pages/payment";
+import HowItWorksPage from "@/pages/how-it-works";
+import EULAPage from "@/pages/eula";
 
 function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
       <ProtectedRoute path="/" component={HomePage} />
-      <ProtectedRoute path="/onboarding" component={OnboardingPage} />
+      <ProtectedRoute path="/how-it-works" component={HowItWorksPage} />
+      <ProtectedRoute path="/payment" component={PaymentPage} />
+      <ProtectedRoute path="/eula" component={EULAPage} />
       <ProtectedRoute path="/kyc" component={KYCPage} />
       <Route component={NotFound} />
     </Switch>

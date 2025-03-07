@@ -1,0 +1,155 @@
+Introduction
+EULA Overview
+This End User License Agreement ("EULA" or "Agreement") is a legally binding contract between you (“User,” "you," or "your") and The Cur8 Group Corp. ("Company," "we," "us," or "our"). This Agreement governs your access to and use of the CreateBase software platform, including any associated services, updates, or content (collectively, the "Software" or "Platform").
+
+By accessing, downloading, installing, or using the Software, you signify your acceptance of this EULA. If you do not agree to the terms of this Agreement, you must immediately stop using the Software.
+
+License Grant and Use Restrictions
+1.1 License Grant
+Subject to your strict compliance with this EULA, The Cur8 Group Corp. grants you a limited, non-exclusive, non-transferable, non-sublicensable, revocable license to access and use the Software solely for your personal or internal business purposes, as permitted by this Agreement and in accordance with all applicable laws and regulations.
+
+In Plain English: We're giving you permission to use our software, but only for your own personal or business purposes and only if you follow the rules in this agreement.
+
+1.2 Use Restrictions
+You agree not to, directly or indirectly:
+
+Copy, modify, adapt, translate, reverse engineer, decompile, disassemble, or create derivative works based on the Software, except as expressly permitted by applicable law notwithstanding this limitation;
+Sell, rent, lease, distribute, license, sublicense, assign, or otherwise transfer any rights to the Software;
+Remove, alter, obscure, or deface any proprietary notices, labels, or trademarks on or within the Software;
+Use the Software for any illegal, unauthorized, or unethical purposes, including but not limited to the infringement of third-party intellectual property rights, the dissemination of unlawful content, or activities that could harm or interfere with the operation of the Software or the networks connected to it.
+In Plain English: You can't mess with the software, share it with others, or use it for anything illegal, unethical, or harmful.
+
+Intellectual Property Rights
+2.1 Ownership
+The Software and all associated intellectual property rights, including but not limited to copyrights, trademarks, trade secrets, and patents, are owned exclusively by The Cur8 Group Corp. or its licensors. Nothing in this EULA grants you any rights, title, or interest in or to the intellectual property of The Cur8 Group Corp., except for the limited license granted in Section 1.1. All rights not expressly granted are reserved by The Cur8 Group Corp.
+
+In Plain English: We own the software and everything that comes with it. You’re just getting a license to use it as outlined in this agreement.
+
+2.2 User Content and Intellectual Property Disclaimer
+(a) By uploading, submitting, or otherwise making available content through the Platform ("User Content"), you retain ownership of your intellectual property rights in the User Content.
+
+(b) The Cur8 Group Corp. expressly disclaims any ownership or control over the copyrights or other intellectual property rights of any User Content uploaded to the Platform. The Cur8 Group Corp. has no intention of using any ownership or administrative share in a creative work to restrict Artist choices or actions, and expressly agrees not to do so.
+
+(c) You hereby grant The Cur8 Group Corp. a worldwide, perpetual, irrevocable, non-exclusive, royalty-free, fully-paid, sublicensable, and transferable license to use, reproduce, distribute, create derivative works of, display, and perform your User Content solely in connection with the operation, promotion, and improvement of the Platform and The Cur8 Group Corp’s business, primarily focused on passing royalty income through the Platform to artists.
+
+In Plain English: You still own anything you upload, but you give us permission to use it as needed to operate our service. We don’t control your actions, we don’t own your content, and we’re not trying to limit how you use it.
+
+2.3 IP Metadata Registration and Royalty Collection
+(a) By using the Platform, you authorize The Cur8 Group Corp. to register creative intellectual property (IP) metadata on your behalf and to act as your publishing entity for the sole purpose of facilitating royalty collection.
+
+(b) The Cur8 Group Corp. expressly disclaims any ownership or control over the copyrights to any IP referenced by user-uploaded metadata. The Company’s role is to act as your accountant, managing royalty collections and distributions, without assuming ownership over your creative IP.
+
+In Plain English: We can handle your IP registration and collect royalties for you, but we’re not claiming ownership of your work. We’re here to assist with the financial side.
+
+User Obligations and Prohibited Activities
+3.1 User Obligations
+You agree to:
+
+Comply with all applicable laws, regulations, and acceptable use policies when using the Software;
+Provide accurate, current, and complete information as required for your use of the Software;
+Maintain the security and confidentiality of your account credentials and promptly notify The Cur8 Group Corp. of any unauthorized use or security breach;
+Maintain confidentiality and not disclose non-public information about the Software.
+In Plain English: Follow the law and policies, keep your account information up to date, protect your account, and notify us if something is wrong.
+
+3.2 Prohibited Activities
+You agree not to:
+
+Upload, post, or share any User Content that violates or infringes upon the intellectual property rights, privacy rights, or other rights of any third party;
+Engage in any activity that could disrupt, damage, disable, overburden, or impair the Software’s performance, integrity, or security, including through the use of malware, bots, or other harmful code;
+Circumvent, disable, or otherwise interfere with any security-related features or technical measures implemented by The Cur8 Group Corp.;
+Use the Software to engage in any conduct that is unlawful, harmful, fraudulent, deceptive, or otherwise objectionable.
+Disclose confidential information related to the Software.
+Use the Software to harass, abuse, stalk, threaten or otherwise violate the rights of others.
+In Plain English: Don't share anything illegal, break the software, bypass security, or harass others.
+
+Termination
+4.1 Termination by The Cur8 Group Corp.
+The Cur8 Group Corp. reserves the right to suspend or terminate your access to the Software at any time and for any reason, with or without cause, including for your breach of this EULA.
+
+In Plain English: If you break the rules or if necessary for legal or practical reasons, we can stop your use of the software.
+
+4.2 Termination by User
+You may terminate this Agreement at any time by ceasing use of the Software and deleting all copies from your devices. Termination will not relieve you of obligations under this EULA.
+
+In Plain English: You can stop using the software, but you’re still responsible for obligations made before.
+
+4.3 Effect of Termination
+Upon termination, all rights and licenses granted to you under this EULA will immediately cease, and you must delete all copies of the Software. Termination does not affect any accrued rights or obligations.
+
+In Plain English: You lose the right to use the software and must delete it, but any previous responsibilities still apply.
+
+Disclaimer of Warranties
+5. Disclaimer of Warranties
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITH ALL FAULTS AND WITHOUT WARRANTY OF ANY KIND.
+
+In Plain English: We’re providing the software as-is without any guarantees. Use it at your own risk.
+
+Limitation of Liability
+6. Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE CUR8 GROUP CORP. BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES.
+
+In Plain English: If something goes wrong, we’re not responsible for most damages. The most we’d owe you is the amount you paid in the last year.
+
+Indemnification
+7. Indemnification
+You agree to indemnify, defend, and hold harmless The Cur8 Group Corp. from any claims arising out of your breach of this EULA or your violation of applicable law.
+
+In Plain English: If you cause us legal trouble, you agree to cover all costs.
+
+Governing Law and Dispute Resolution
+8.1 Governing Law
+This Agreement is governed by Delaware law. Any disputes will be resolved exclusively in San Diego County, California.
+
+In Plain English: Delaware’s laws apply, and disputes go to court in San Diego.
+
+8.2 Dispute Resolution
+Any disputes arising from this EULA shall be resolved through binding arbitration in San Diego, California.
+
+In Plain English: Disagreements will be handled by arbitration in San Diego, not in court.
+
+8.3 Waiver of Class Action
+You waive the right to participate in class-wide lawsuits or arbitration.
+
+In Plain English: Disputes will be handled individually, not as a class action.
+
+Miscellaneous
+9.1 Entire Agreement
+This EULA constitutes the entire agreement between you and The Cur8 Group Corp. concerning the Software.
+
+In Plain English: This is the full and final agreement about the software.
+
+9.2 Waiver
+No waiver of any term of this EULA shall be deemed a further or continuing waiver.
+
+In Plain English: If we don’t enforce a part of this agreement right away, we’re not giving up our right to enforce it later.
+
+9.3 Severability
+If any provision of this EULA is found to be invalid or unenforceable, the remaining provisions will remain in full force and effect.
+
+In Plain English: If one part of this agreement is invalid, the rest still applies.
+
+9.4 Assignment
+You may not assign or transfer this EULA without The Cur8 Group Corp.’s consent. The Cur8 Group Corp. may assign or transfer this EULA without restriction.
+
+In Plain English: You can’t transfer your rights, but we can.
+
+9.5 Amendments
+The Cur8 Group Corp. reserves the right to modify this EULA at any time.
+
+In Plain English: We can change the agreement, and if you keep using the software, you accept the changes.
+
+9.6 Force Majeure
+The Cur8 Group Corp. shall not be liable for any failure to perform due to forces beyond its control, including natural disasters, war, or loss of utilities.
+
+In Plain English: We’re not responsible for problems caused by things outside of our control.
+
+9.9 Confidentiality
+You agree not to disclose any confidential information about the Software.
+
+In Plain English: Don’t share any private information about the Software.
+
+9.10 Survival
+Certain provisions of this EULA, including ownership and liability limitations, will survive after termination.
+
+In Plain English: Some parts of this agreement apply even after the agreement ends.
+

@@ -1,96 +1,41 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "@/components/ui/button";
 import { Loader2, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Redirect } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
 
-if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
-  throw new Error("Missing Stripe public key");
-}
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-
-function CheckoutForm() {
-  const stripe = useStripe();
-  const elements = useElements();
+export default function Payment() {
+  const { user, updateUser } = useAuth(); // Assuming useAuth now provides updateUser
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  if (user?.paymentStatus === "completed") {
+    return <Redirect to="/eula" />;
+  }
 
-    if (!stripe || !elements) return;
-
+  const handlePayment = async () => {
     setIsProcessing(true);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/catalog`,
-      },
-    });
-
-    if (error) {
+    try {
+      await apiRequest("POST", "/api/payment", {});
+      toast({
+        title: "Payment successful",
+        description: "Please proceed to review the EULA",
+      });
+      // Update user state after successful payment
+      updateUser({ ...user, paymentStatus: "completed" });
+    } catch (error: any) {
       toast({
         title: "Payment failed",
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setIsProcessing(false);
     }
-
-    setIsProcessing(false);
   };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <PaymentElement />
-      <Button
-        type="submit"
-        disabled={!stripe || isProcessing}
-        className="w-full"
-      >
-        {isProcessing ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Processing...
-          </>
-        ) : (
-          "Pay $20"
-        )}
-      </Button>
-    </form>
-  );
-}
-
-export default function Payment() {
-  const { user } = useAuth();
-  const [clientSecret, setClientSecret] = useState("");
-
-  useEffect(() => {
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: 20 }),
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, []);
-
-  if (user?.paymentCompleted) {
-    return <Redirect to="/" />;
-  }
-
-  if (!clientSecret) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -102,17 +47,29 @@ export default function Payment() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Elements
-            stripe={stripePromise}
-            options={{
-              clientSecret,
-              appearance: {
-                theme: "stripe",
-              },
-            }}
-          >
-            <CheckoutForm />
-          </Elements>
+          <div className="space-y-6">
+            <div className="border rounded-lg p-4">
+              <h3 className="font-medium mb-2">One-time Setup Fee</h3>
+              <p className="text-2xl font-bold">$20.00</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                This covers identity verification, royalty recovery, and ongoing collection services.
+              </p>
+            </div>
+            <Button
+              onClick={handlePayment}
+              disabled={isProcessing}
+              className="w-full"
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Pay $20"
+              )}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
