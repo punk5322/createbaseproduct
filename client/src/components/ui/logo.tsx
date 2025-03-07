@@ -9,15 +9,11 @@ interface LogoProps {
 export function Logo({ className = "", isLoading = false }: LogoProps) {
   return (
     <div className={cn(
-      "relative",
+      "text-xl font-semibold",
       isLoading && "animate-spin duration-1000",
       className
     )}>
-      <img 
-        src="/CreateBase_Emblem.png" 
-        alt="CreateBase" 
-        className="w-8 h-8 object-contain"
-      />
+      CreateBase
     </div>
   );
 }

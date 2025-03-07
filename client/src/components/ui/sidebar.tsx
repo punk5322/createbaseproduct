@@ -2,7 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
-
+import { Logo } from "./logo"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -361,8 +361,7 @@ const SidebarHeader = React.forwardRef<
       {...props}
     >
       <div className="flex items-center gap-2">
-        <Logo className="w-8 h-8" /> {/* Assuming Logo component is defined elsewhere */}
-        <span className="text-lg font-semibold">CreateBase</span>
+        <Logo />
       </div>
     </div>
   )
@@ -516,7 +515,7 @@ const SidebarMenuItem = React.forwardRef<
 SidebarMenuItem.displayName = "SidebarMenuItem"
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full items-center gap-3 px-4 py-3 text-sm font-medium outline-none transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-accent/5 hover:to-transparent focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/10 data-[active=true]:to-transparent [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  "peer/menu-button flex w-full items-center gap-3 px-4 py-3 text-sm font-medium outline-none transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-primary/5 hover:to-transparent focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/10 data-[active=true]:to-transparent [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
