@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Edit } from "lucide-react";
+import { Trash2, Edit, Split } from "lucide-react";
 
 export function SongDetails({ song, isOpen, onClose }) {
   const [editSplitsOpen, setEditSplitsOpen] = useState(false);
@@ -14,7 +14,6 @@ export function SongDetails({ song, isOpen, onClose }) {
   const { toast } = useToast();
 
   const handleDelete = () => {
-    // Handle delete logic
     toast({
       title: "Song Deleted",
       description: "The song has been removed from your catalog."
@@ -45,17 +44,18 @@ export function SongDetails({ song, isOpen, onClose }) {
             <div className="flex gap-2 mt-6">
               <Button 
                 variant="outline" 
-                className="flex-1"
                 onClick={() => setEditSplitsOpen(true)}
+                className="flex items-center gap-2"
               >
-                <Edit className="h-4 w-4 mr-2" />
+                <Edit className="h-4 w-4" />
                 Edit Splits
               </Button>
               <Button 
-                variant="outline" 
-                className="flex-1"
+                variant="outline"
                 onClick={() => setConditionalSplitsOpen(true)}
+                className="flex items-center gap-2"
               >
+                <Split className="h-4 w-4" />
                 Add Conditional Split
               </Button>
               <Button 
@@ -79,9 +79,12 @@ export function SongDetails({ song, isOpen, onClose }) {
           <div className="space-y-4 py-4">
             <div className="space-y-4">
               {song?.contributors?.map((contributor, index) => (
-                <div key={index} className="space-y-2">
+                <div key={index} className="space-y-4 p-4 border rounded-lg">
                   <div className="flex items-center justify-between">
-                    <Label>{contributor.name}</Label>
+                    <div className="space-y-1">
+                      <Label>{contributor.name}</Label>
+                      <div className="text-sm text-muted-foreground">Songwriter</div>
+                    </div>
                     <Input 
                       type="number" 
                       value={contributor.split} 
@@ -90,9 +93,15 @@ export function SongDetails({ song, isOpen, onClose }) {
                       max="100"
                     />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm text-muted-foreground">PRO Affiliation</Label>
-                    <Input value={contributor.proAffiliation} className="flex-1" />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm text-muted-foreground">PRO Affiliation</Label>
+                      <Input value={contributor.proAffiliation} />
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Publisher</Label>
+                      <Input value={contributor.publisher} />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -114,7 +123,10 @@ export function SongDetails({ song, isOpen, onClose }) {
       </Dialog>
 
       {/* Conditional Splits Modal */}
-      <Dialog open={conditionalSplitsOpen} onOpenChange={setConditionalSplitsOpen}>
+      <Dialog open={conditionalSplitsOpen} onOpenChange={(open) => {
+        setConditionalSplitsOpen(open);
+        if (!open) setConditionalStep(1);
+      }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
@@ -130,14 +142,17 @@ export function SongDetails({ song, isOpen, onClose }) {
               <div className="space-y-4">
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start"
+                  className="w-full justify-start relative px-4 py-6"
                   onClick={() => setConditionalStep(2)}
                 >
+                  <div className="absolute top-2 right-2 bg-black text-white text-xs px-2 py-0.5 rounded">
+                    Selected
+                  </div>
                   Recoupment-Based
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start"
+                  className="w-full justify-start px-4 py-6"
                   onClick={() => setConditionalStep(2)}
                 >
                   Time-Based
@@ -202,15 +217,15 @@ export function SongDetails({ song, isOpen, onClose }) {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <h3 className="font-medium">Pre-Threshold Split</h3>
-                  {/* Display pre-threshold splits */}
+                  <div className="h-8 bg-gradient-to-r from-green-500 to-red-500 rounded-full" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="font-medium">Condition</h3>
-                  <p>When revenue reaches $X</p>
+                  <p>When revenue reaches $750</p>
                 </div>
                 <div className="space-y-2">
                   <h3 className="font-medium">Post-Threshold Split</h3>
-                  {/* Display post-threshold splits */}
+                  <div className="h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
                 </div>
                 <div className="flex gap-2">
                   <Button 
