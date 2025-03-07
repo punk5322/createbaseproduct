@@ -1,24 +1,23 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./hooks/use-auth";
+import { ProtectedRoute } from "./lib/protected-route";
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from "@/hooks/use-auth";
+
 import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
-import Dashboard from "@/pages/dashboard";
-import KYC from "@/pages/kyc";
-import Payment from "@/pages/payment";
-import Catalog from "@/pages/catalog";
-import { ProtectedRoute } from "./lib/protected-route";
+import HomePage from "@/pages/home-page";
+import OnboardingPage from "@/pages/onboarding";
+import KYCPage from "@/pages/kyc";
 
 function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={Dashboard} />
-      <ProtectedRoute path="/kyc" component={KYC} />
-      <ProtectedRoute path="/payment" component={Payment} />
-      <ProtectedRoute path="/catalog" component={Catalog} />
+      <ProtectedRoute path="/" component={HomePage} />
+      <ProtectedRoute path="/onboarding" component={OnboardingPage} />
+      <ProtectedRoute path="/kyc" component={KYCPage} />
       <Route component={NotFound} />
     </Switch>
   );

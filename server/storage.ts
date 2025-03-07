@@ -1,4 +1,4 @@
-import { User, InsertUser, Song, InsertSong } from "@shared/schema";
+import { users, songs, type User, type InsertUser, type Song } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 
@@ -9,14 +9,11 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, updates: Partial<User>): Promise<User>;
-  
   getSongs(userId: number): Promise<Song[]>;
-  getSong(id: number): Promise<Song | undefined>;
-  createSong(song: InsertSong): Promise<Song>;
+  createSong(song: Partial<Song>): Promise<Song>;
   updateSong(id: number, updates: Partial<Song>): Promise<Song>;
   deleteSong(id: number): Promise<void>;
-  
-  sessionStore: session.Store;
+  sessionStore: session.SessionStore;
 }
 
 export class MemStorage implements IStorage {
@@ -24,7 +21,7 @@ export class MemStorage implements IStorage {
   private songs: Map<number, Song>;
   private currentUserId: number;
   private currentSongId: number;
-  sessionStore: session.Store;
+  sessionStore: session.SessionStore;
 
   constructor() {
     this.users = new Map();
@@ -48,7 +45,13 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { ...insertUser, id, kycVerified: false, paymentCompleted: false };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      kycStatus: "pending",
+      driverLicenseUrl: null,
+      paymentStatus: "pending"
+    };
     this.users.set(id, user);
     return user;
   }
@@ -63,26 +66,31 @@ export class MemStorage implements IStorage {
   }
 
   async getSongs(userId: number): Promise<Song[]> {
-    return Array.from(this.songs.values()).filter(
-      (song) => song.artistId === userId,
-    );
+    return Array.from(this.songs.values()).filter(song => song.userId === userId);
   }
 
-  async getSong(id: number): Promise<Song | undefined> {
-    return this.songs.get(id);
-  }
-
-  async createSong(song: InsertSong): Promise<Song> {
+  async createSong(song: Partial<Song>): Promise<Song> {
     const id = this.currentSongId++;
-    const newSong: Song = { ...song, id };
+    const newSong: Song = {
+      id,
+      title: song.title!,
+      artist: song.artist!,
+      userId: song.userId!,
+      status: song.status || "unclaimed",
+      splitData: song.splitData || {
+        music: [],
+        lyrics: [],
+        instruments: []
+      }
+    };
     this.songs.set(id, newSong);
     return newSong;
   }
 
   async updateSong(id: number, updates: Partial<Song>): Promise<Song> {
-    const song = await this.getSong(id);
+    const song = this.songs.get(id);
     if (!song) throw new Error("Song not found");
-
+    
     const updatedSong = { ...song, ...updates };
     this.songs.set(id, updatedSong);
     return updatedSong;
