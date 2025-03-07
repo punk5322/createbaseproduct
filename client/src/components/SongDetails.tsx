@@ -5,13 +5,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Edit, Split } from "lucide-react";
+import { Trash2, Edit2, Split } from "lucide-react";
 
 export function SongDetails({ song, isOpen, onClose }) {
   const [editSplitsOpen, setEditSplitsOpen] = useState(false);
   const [conditionalSplitsOpen, setConditionalSplitsOpen] = useState(false);
   const [conditionalStep, setConditionalStep] = useState(1);
   const { toast } = useToast();
+
+  const defaultContributors = [
+    { name: "John Lennon", split: 40, proAffiliation: "ASCAP", publisher: "Northern Songs" },
+    { name: "Paul McCartney", split: 40, proAffiliation: "ASCAP", publisher: "Northern Songs" },
+    { name: "Camillo Felgen", split: 10, proAffiliation: "GEMA", publisher: "Sony Music" },
+    { name: "Heinz Hellmer", split: 10, proAffiliation: "GEMA", publisher: "Sony Music" }
+  ];
 
   const handleDelete = () => {
     toast({
@@ -20,13 +27,6 @@ export function SongDetails({ song, isOpen, onClose }) {
     });
     onClose();
   };
-
-  const defaultContributors = [
-    { name: "John Lennon", split: 40, proAffiliation: "ASCAP", publisher: "Northern Songs" },
-    { name: "Paul McCartney", split: 40, proAffiliation: "ASCAP", publisher: "Northern Songs" },
-    { name: "Camillo Felgen", split: 10, proAffiliation: "GEMA", publisher: "Sony Music" },
-    { name: "Heinz Hellmer", split: 10, proAffiliation: "GEMA", publisher: "Sony Music" }
-  ];
 
   return (
     <>
@@ -38,52 +38,52 @@ export function SongDetails({ song, isOpen, onClose }) {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <h3 className="font-medium">Title</h3>
-              <p>{song?.title}</p>
+              <p>{song?.title || "Unknown Title"}</p>
             </div>
             <div className="space-y-2">
               <h3 className="font-medium">Artists</h3>
-              <p>{song?.artists?.join(", ")}</p>
+              <p>{song?.artists?.join(", ") || "No artists"}</p>
             </div>
             <div className="space-y-2">
               <h3 className="font-medium">Release Date</h3>
-              <p>{song?.releaseDate}</p>
+              <p>{song?.releaseDate || "Not set"}</p>
             </div>
-            <div className="flex gap-2 mt-6">
+            <div className="flex flex-col gap-2 mt-6">
               <Button 
                 variant="outline" 
                 onClick={() => setEditSplitsOpen(true)}
-                className="flex items-center gap-2"
+                className="w-full justify-start text-left"
               >
-                <Edit className="h-4 w-4" />
+                <Edit2 className="h-4 w-4 mr-2" />
                 Edit Splits
               </Button>
               <Button 
                 variant="outline"
                 onClick={() => setConditionalSplitsOpen(true)}
-                className="flex items-center gap-2"
+                className="w-full justify-start text-left"
               >
-                <Split className="h-4 w-4" />
+                <Split className="h-4 w-4 mr-2" />
                 Add Conditional Split
               </Button>
               <Button 
                 variant="destructive" 
-                size="icon"
                 onClick={handleDelete}
+                className="w-full justify-start text-left"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Song
               </Button>
             </div>
           </div>
         </SheetContent>
       </Sheet>
 
-      {/* Edit Splits Modal */}
       <Dialog open={editSplitsOpen} onOpenChange={setEditSplitsOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Edit Splits</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-4">
             {defaultContributors.map((contributor, index) => (
               <div key={index} className="space-y-4 p-4 border rounded-lg">
                 <div className="flex items-center justify-between">
@@ -93,7 +93,7 @@ export function SongDetails({ song, isOpen, onClose }) {
                   </div>
                   <Input 
                     type="number" 
-                    value={contributor.split} 
+                    defaultValue={contributor.split} 
                     className="w-24" 
                     min="0"
                     max="100"
@@ -111,23 +111,19 @@ export function SongDetails({ song, isOpen, onClose }) {
                 </div>
               </div>
             ))}
-            <Button 
-              className="w-full"
-              onClick={() => {
-                setEditSplitsOpen(false);
-                toast({
-                  title: "Splits Updated",
-                  description: "The split percentages have been updated successfully."
-                });
-              }}
-            >
+            <Button className="w-full" onClick={() => {
+              setEditSplitsOpen(false);
+              toast({
+                title: "Splits Updated",
+                description: "The split percentages have been updated successfully."
+              });
+            }}>
               Save Changes
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Conditional Splits Modal */}
       <Dialog 
         open={conditionalSplitsOpen} 
         onOpenChange={(open) => {
@@ -135,7 +131,7 @@ export function SongDetails({ song, isOpen, onClose }) {
           if (!open) setConditionalStep(1);
         }}
       >
-        <DialogContent className="max-w-md">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>
               {conditionalStep === 1 && "Add Conditional Split"}
@@ -145,7 +141,7 @@ export function SongDetails({ song, isOpen, onClose }) {
               {conditionalStep === 5 && "Review Conditional Split"}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-4">
             {conditionalStep === 1 && (
               <div className="space-y-4">
                 <Button 
@@ -171,7 +167,7 @@ export function SongDetails({ song, isOpen, onClose }) {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Threshold Amount ($)</Label>
-                  <Input type="number" placeholder="Enter amount" />
+                  <Input type="number" placeholder="Enter amount" defaultValue="750" />
                 </div>
                 <Button 
                   className="w-full"
@@ -188,7 +184,7 @@ export function SongDetails({ song, isOpen, onClose }) {
                   {defaultContributors.map((contributor, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <Label>{contributor.name}</Label>
-                      <Input type="number" className="w-24" placeholder="%" />
+                      <Input type="number" className="w-24" placeholder="%" defaultValue={contributor.split} />
                     </div>
                   ))}
                 </div>
@@ -207,7 +203,7 @@ export function SongDetails({ song, isOpen, onClose }) {
                   {defaultContributors.map((contributor, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <Label>{contributor.name}</Label>
-                      <Input type="number" className="w-24" placeholder="%" />
+                      <Input type="number" className="w-24" placeholder="%" defaultValue={contributor.split} />
                     </div>
                   ))}
                 </div>
