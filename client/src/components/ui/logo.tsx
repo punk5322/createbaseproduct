@@ -2,11 +2,8 @@ import React from "react";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <img 
-      src="/CreateBase-WORDMARK-02.png"
-      alt="CreateBase"
-      className={`h-12 w-auto ${className}`}
-      style={{ maxWidth: '200px', objectFit: 'contain' }}
-    />
+    <div className={`text-3xl font-bold ${className}`}>
+      CreateBase
+    </div>
   );
 }

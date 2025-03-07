@@ -66,7 +66,7 @@ export default function AuthPage() {
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div className="mb-8">
-            <Logo className="mx-auto" />
+            <Logo className="mx-auto text-center" />
           </div>
           <Tabs defaultValue="login">
             <TabsList className="grid w-full grid-cols-2">
@@ -256,15 +256,36 @@ export default function AuthPage() {
       <div className="hidden lg:block relative w-0 flex-1">
         <div className="absolute inset-0 bg-black">
           <div className="absolute inset-0 flex items-center justify-center p-8">
-            <div className="text-white max-w-lg">
-              <h1 className="text-4xl font-bold mb-4">
-                Music Royalty Management with CreateBase
+            <div className="text-white max-w-lg space-y-6">
+              <h1 className="text-4xl font-bold">
+                Your Music Rights Hub
               </h1>
-              <p className="text-lg text-gray-300">
-                Take control of your music catalog and manage your royalties with
-                our comprehensive platform. Track splits, monitor payments, and
-                handle your musical assets all in one place.
-              </p>
+              <div className="space-y-4">
+                <p className="text-lg text-gray-300">
+                  CreateBase is your all-in-one platform for music rights management. We help you:
+                </p>
+                <ul className="space-y-3 text-gray-300">
+                  <li className="flex items-start">
+                    <span className="font-semibold mr-2">•</span>
+                    Track and manage song splits with complete transparency
+                  </li>
+                  <li className="flex items-start">
+                    <span className="font-semibold mr-2">•</span>
+                    Recover unpaid royalties from the "black box"
+                  </li>
+                  <li className="flex items-start">
+                    <span className="font-semibold mr-2">•</span>
+                    Prepare your catalog for licensing opportunities
+                  </li>
+                  <li className="flex items-start">
+                    <span className="font-semibold mr-2">•</span>
+                    Get paid faster with automated royalty distribution
+                  </li>
+                </ul>
+                <p className="text-lg text-gray-300 mt-4">
+                  Join thousands of artists who trust CreateBase to protect and manage their music rights.
+                </p>
+              </div>
             </div>
           </div>
         </div>
