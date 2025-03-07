@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SongTable from "@/components/song-table";
 import { Loader2, LogOut, Search, Sparkles, Plus } from "lucide-react";
 import AddSongSheet from "@/components/add-song-sheet";
-import { Logo } from "@/components/ui/logo";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -34,7 +33,7 @@ export default function HomePage() {
     .sort((a, b) => {
       if (sortBy === "title") return a.title.localeCompare(b.title);
       if (sortBy === "artist") return a.artist.localeCompare(b.artist);
-      return a.status.localeCompare(b.status);
+      return (a.status || '').localeCompare(b.status || '');
     });
 
   useEffect(() => {
@@ -67,14 +66,11 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-start mb-8">
-          <div className="flex items-center gap-4">
-            <Logo />
-            <div>
-              <h2 className="text-xl font-medium">Welcome, {user?.artistName}</h2>
-              <p className="text-sm text-muted-foreground">
-                Manage your music catalog and royalties
-              </p>
-            </div>
+          <div>
+            <h2 className="text-xl font-medium">Welcome, {user?.artistName}</h2>
+            <p className="text-sm text-muted-foreground">
+              Manage your music catalog and royalties
+            </p>
           </div>
           <div className="flex gap-4">
             <AddSongSheet />
