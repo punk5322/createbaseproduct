@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +10,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Search, Edit, Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+
+const splitFormSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  artist: z.string().min(1, "Artist is required"),
+  songwriter: z.string().min(1, "Songwriter is required"),
+  split: z.number().min(0).max(100, "Split must be between 0 and 100"),
+  album: z.string().optional(),
+});
+
+type SplitFormValues = z.infer<typeof splitFormSchema>;
 
 // Mock data for initial display
 const mockSplits = [
@@ -22,7 +38,6 @@ const mockSplits = [
     totalShare: 100,
     status: "Active"
   },
-  // Add more mock data as needed
 ];
 
 export default function SplitsPage() {
@@ -30,6 +45,36 @@ export default function SplitsPage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("songTitle");
+  const { toast } = useToast();
+
+  const form = useForm<SplitFormValues>({
+    resolver: zodResolver(splitFormSchema),
+    defaultValues: {
+      title: "",
+      artist: "",
+      songwriter: "",
+      split: 0,
+      album: "",
+    },
+  });
+
+  const onSubmit = async (data: SplitFormValues) => {
+    try {
+      await apiRequest("POST", "/api/splits", data);
+      toast({
+        title: "Split Created",
+        description: "New split has been created successfully.",
+      });
+      form.reset();
+      setEditDialogOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -42,11 +87,90 @@ export default function SplitsPage() {
               New Split
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
               <DialogTitle>Create New Split</DialogTitle>
             </DialogHeader>
-            {/* Add split creation form here */}
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Song Title</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter song title" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="artist"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Artist</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter artist name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="songwriter"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Songwriter</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter songwriter name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="split"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Split Percentage</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          {...field} 
+                          onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                          placeholder="Enter split percentage" 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="album"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Album (Optional)</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter album name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex gap-3 justify-end pt-4">
+                  <Button type="button" variant="outline" onClick={() => setEditDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit">Create Split</Button>
+                </div>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>
@@ -115,7 +239,6 @@ export default function SplitsPage() {
           </Table>
         </CardContent>
       </Card>
-
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="sm:max-w-[800px]">
           <DialogHeader>
@@ -154,7 +277,6 @@ export default function SplitsPage() {
                   </Button>
                 </div>
               </div>
-
               <div className="flex gap-4">
                 <Button
                   variant="outline"
