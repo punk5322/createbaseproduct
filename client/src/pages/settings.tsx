@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Avatar } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -130,14 +132,27 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Legal First Name</Label>
-                    <Input defaultValue={user?.legalFirstName} className="mt-2" />
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Label>Legal Name</Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>The name that appears on your legal ID documents</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
-                  <div>
-                    <Label>Legal Last Name</Label>
-                    <Input defaultValue={user?.legalLastName} className="mt-2" />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>First Name</Label>
+                      <Input defaultValue={user?.legalFirstName} className="mt-2" />
+                    </div>
+                    <div>
+                      <Label>Last Name</Label>
+                      <Input defaultValue={user?.legalLastName} className="mt-2" />
+                    </div>
                   </div>
                 </div>
 
@@ -162,7 +177,17 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <Label>Artist Names</Label>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Label>Artist Names</Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>The name of your band or performing act that appears on streaming platforms and releases</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {artistNames.map((name, index) => (
                       <div key={index} className="flex items-center gap-2 bg-secondary p-2 rounded">
@@ -183,7 +208,17 @@ export default function SettingsPage() {
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Add Artist Name</DialogTitle>
+                          <DialogTitle className="flex items-center gap-2">
+                            Add Artist Name
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>This is the name under which you perform and release music</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </DialogTitle>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid grid-cols-2 gap-4">
@@ -222,7 +257,17 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <Label>Songwriter Names</Label>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Label>Songwriter Names</Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>The name under which you write and register songs for royalty collection</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {songwriterNames.map((name, index) => (
                       <div key={index} className="flex items-center gap-2 bg-secondary p-2 rounded">
@@ -243,7 +288,17 @@ export default function SettingsPage() {
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Add Songwriter Name</DialogTitle>
+                          <DialogTitle className="flex items-center gap-2">
+                            Add Songwriter Name
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>This is the name used for song registration and royalty collection</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </DialogTitle>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid grid-cols-2 gap-4">
@@ -291,36 +346,6 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Email Notifications</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label className="flex items-center justify-between">
-                  <div>
-                    <div>All Updates</div>
-                    <div className="text-sm text-muted-foreground">
-                      Stay informed with the latest news on product and feature updates
-                    </div>
-                  </div>
-                  <Switch />
-                </Label>
-              </div>
-              <div>
-                <Label className="flex items-center justify-between">
-                  <div>
-                    <div>Essential Updates</div>
-                    <div className="text-sm text-muted-foreground">
-                      Critical news about key product and feature updates
-                    </div>
-                  </div>
-                  <Switch defaultChecked />
-                </Label>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Phone Notifications</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
