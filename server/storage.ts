@@ -4,6 +4,24 @@ import createMemoryStore from "memorystore";
 
 const MemoryStore = createMemoryStore(session);
 
+// Initial seed data for development
+const INITIAL_USERS: User[] = [
+  {
+    id: 1,
+    username: "drake",
+    // Password: "password123"
+    password: "5d0e1e25987b36bcdeb6a98d8c0654d3c7d68d161b5f1a45b17a17cd33073ebcee1322aec86c7c1c2fde7ef3fd3ddacc84a7a5e8e1c3b71d91e95f80ab8b52e1.f925fa51e0d0e55f",
+    legalFirstName: "Aubrey",
+    legalLastName: "Graham",
+    artistName: "Drake",
+    songwriterName: "Drake",
+    spotifyArtistLink: "https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4",
+    kycStatus: "completed",
+    driverLicenseUrl: null,
+    paymentStatus: "completed"
+  }
+];
+
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
@@ -26,7 +44,13 @@ export class MemStorage implements IStorage {
   constructor() {
     this.users = new Map();
     this.songs = new Map();
-    this.currentUserId = 1;
+
+    // Initialize with seed data
+    INITIAL_USERS.forEach(user => {
+      this.users.set(user.id, user);
+    });
+
+    this.currentUserId = Math.max(...Array.from(this.users.keys())) + 1;
     this.currentSongId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000,
@@ -59,7 +83,7 @@ export class MemStorage implements IStorage {
   async updateUser(id: number, updates: Partial<User>): Promise<User> {
     const user = await this.getUser(id);
     if (!user) throw new Error("User not found");
-    
+
     const updatedUser = { ...user, ...updates };
     this.users.set(id, updatedUser);
     return updatedUser;
@@ -90,7 +114,7 @@ export class MemStorage implements IStorage {
   async updateSong(id: number, updates: Partial<Song>): Promise<Song> {
     const song = this.songs.get(id);
     if (!song) throw new Error("Song not found");
-    
+
     const updatedSong = { ...song, ...updates };
     this.songs.set(id, updatedSong);
     return updatedSong;
