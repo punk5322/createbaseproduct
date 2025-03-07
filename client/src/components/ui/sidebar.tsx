@@ -58,5 +58,25 @@ export const SidebarInset = ({ className, children }: { className?: string; chil
   </main>
 );
 
-// Compatibility component for existing code
+// Compatibility exports for existing codebase
+export const SidebarMenuItem = ({ children, className, ...props }: React.HTMLProps<HTMLLIElement>) => (
+  <li className={cn("relative transition-transform duration-200 ease-in-out hover:translate-x-1", className)} {...props}>
+    {children}
+  </li>
+);
+
 export const SidebarMenuButton = Button;
+export const SidebarMenu = ({ className, ...props }: React.HTMLProps<HTMLUListElement>) => (
+  <ul className={cn("flex w-full min-w-0 flex-col gap-1", className)} {...props} />
+);
+
+// Additional compatibility exports that might be needed
+export const SidebarHeader = ({ className, ...props }: React.HTMLProps<HTMLDivElement>) => (
+  <div className={cn("flex flex-col gap-2 p-4", className)} {...props} />
+);
+
+export const SidebarGroup = ({ className, ...props }: React.HTMLProps<HTMLDivElement>) => (
+  <div className={cn("flex flex-col gap-2", className)} {...props} />
+);
+
+export const SidebarProvider = ({ children }: { children: ReactNode }) => <>{children}</>;
