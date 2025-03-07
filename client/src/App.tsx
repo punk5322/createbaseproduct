@@ -92,28 +92,50 @@ function SidebarNav() {
   );
 }
 
-function Router() {
+function ProtectedRoutes() {
   return (
     <SidebarProvider>
       <SidebarNav />
       <SidebarInset>
         <Switch>
-          <Route path="/auth" component={AuthPage} />
-          <ProtectedRoute path="/" component={HomePage} />
-          <ProtectedRoute path="/dashboard" component={HomePage} />
-          <ProtectedRoute path="/add-song" component={AddSongPage} />
-          <ProtectedRoute path="/how-it-works" component={HowItWorksPage} />
-          <ProtectedRoute path="/payment" component={PaymentPage} />
-          <ProtectedRoute path="/eula" component={EULAPage} />
-          <ProtectedRoute path="/kyc" component={KYCPage} />
-          <ProtectedRoute path="/reporting" component={ReportingPage} />
-          <ProtectedRoute path="/settings" component={SettingsPage} />
-          <ProtectedRoute path="/payments" component={PaymentsPage} />
-          <ProtectedRoute path="/splits" component={SplitsPage} />
-          <Route component={NotFound} />
+          <Route path="/dashboard" component={HomePage} />
+          <Route path="/add-song" component={AddSongPage} />
+          <Route path="/reporting" component={ReportingPage} />
+          <Route path="/settings" component={SettingsPage} />
+          <Route path="/payments" component={PaymentsPage} />
+          <Route path="/splits" component={SplitsPage} />
+          <Route path="/">
+            <HomePage />
+          </Route>
         </Switch>
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+function OnboardingRoutes() {
+  return (
+    <Switch>
+      <Route path="/how-it-works" component={HowItWorksPage} />
+      <Route path="/payment" component={PaymentPage} />
+      <Route path="/eula" component={EULAPage} />
+      <Route path="/kyc" component={KYCPage} />
+    </Switch>
+  );
+}
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/auth" component={AuthPage} />
+      <ProtectedRoute path="/onboarding" component={OnboardingPage} />
+      <ProtectedRoute path="/how-it-works" component={HowItWorksPage} />
+      <ProtectedRoute path="/payment" component={PaymentPage} />
+      <ProtectedRoute path="/eula" component={EULAPage} />
+      <ProtectedRoute path="/kyc" component={KYCPage} />
+      <ProtectedRoute path="*" component={ProtectedRoutes} />
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 
