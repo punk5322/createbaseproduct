@@ -35,6 +35,15 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Wrapper for pages that need the main layout
+function ProtectedPageWithLayout({ component: Component }: { component: React.ComponentType }) {
+  return (
+    <MainLayout>
+      <Component />
+    </MainLayout>
+  );
+}
+
 function Router() {
   return (
     <Switch>
@@ -44,11 +53,29 @@ function Router() {
       <ProtectedRoute path="/payment" component={PaymentPage} />
       <ProtectedRoute path="/eula" component={EULAPage} />
       <ProtectedRoute path="/kyc" component={KYCPage} />
-      <ProtectedRoute path="/dashboard" component={HomePage} />
-      <ProtectedRoute path="/reporting" component={ReportingPage} />
-      <ProtectedRoute path="/settings" component={SettingsPage} />
-      <ProtectedRoute path="/payments" component={PaymentsPage} />
-      <ProtectedRoute path="/splits" component={SplitsPage} />
+
+      {/* Protected routes with MainLayout */}
+      <ProtectedRoute 
+        path="/dashboard" 
+        component={() => <ProtectedPageWithLayout component={HomePage} />} 
+      />
+      <ProtectedRoute 
+        path="/reporting" 
+        component={() => <ProtectedPageWithLayout component={ReportingPage} />} 
+      />
+      <ProtectedRoute 
+        path="/settings" 
+        component={() => <ProtectedPageWithLayout component={SettingsPage} />} 
+      />
+      <ProtectedRoute 
+        path="/payments" 
+        component={() => <ProtectedPageWithLayout component={PaymentsPage} />} 
+      />
+      <ProtectedRoute 
+        path="/splits" 
+        component={() => <ProtectedPageWithLayout component={SplitsPage} />} 
+      />
+
       <Route path="/">
         <Redirect to="/dashboard" />
       </Route>
