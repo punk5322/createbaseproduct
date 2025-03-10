@@ -29,7 +29,7 @@ export function Sidebar() {
 
           return (
             <Link key={item.href} href={item.href}>
-              <a
+              <div
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 mb-1",
                   "text-sm font-medium rounded-lg",
@@ -41,7 +41,7 @@ export function Sidebar() {
               >
                 <Icon className="w-5 h-5" />
                 <span>{item.label}</span>
-              </a>
+              </div>
             </Link>
           );
         })}
