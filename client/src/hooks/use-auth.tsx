@@ -15,7 +15,7 @@ interface AuthContextType {
   error: Error | null;
   loginMutation: ReturnType<typeof useLoginMutation>;
   registerMutation: ReturnType<typeof useRegisterMutation>;
-  logout: () => Promise<void>;
+  logoutMutation: ReturnType<typeof useLogoutMutation>;
   isAuthenticated: boolean;
 }
 
@@ -65,6 +65,27 @@ function useRegisterMutation() {
   });
 }
 
+function useLogoutMutation() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      await apiRequest("POST", "/api/logout");
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(["/api/user"], null);
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Logout failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<Error | null>(null);
   const queryClient = useQueryClient();
@@ -86,17 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useLoginMutation();
   const registerMutation = useRegisterMutation();
-
-  const logout = async () => {
-    try {
-      await apiRequest("POST", "/api/logout");
-      queryClient.setQueryData(["/api/user"], null);
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error("Logout failed");
-      setError(err);
-      throw err;
-    }
-  };
+  const logoutMutation = useLogoutMutation();
 
   const value = {
     user: user || null,
@@ -104,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     loginMutation,
     registerMutation,
-    logout,
+    logoutMutation,
     isAuthenticated: !!user
   };
 
