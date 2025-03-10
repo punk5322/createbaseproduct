@@ -26,7 +26,7 @@ interface Split {
 export default function SplitsPage() {
   const [createSplitOpen, setCreateSplitOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterArtist, setFilterArtist] = useState<string>("");
+  const [filterArtist, setFilterArtist] = useState<string>("all");
   const [sortBy, setSortBy] = useState("songTitle");
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -54,7 +54,7 @@ export default function SplitsPage() {
       (split) =>
         (split.songTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
           split.artist.toLowerCase().includes(searchQuery.toLowerCase())) &&
-        (!filterArtist ||
+        (filterArtist === "all" ||
           split.artist === filterArtist ||
           split.collaborators.some((c) => c.name === filterArtist))
     )
@@ -125,7 +125,7 @@ export default function SplitsPage() {
                 <SelectValue placeholder="Filter by artist" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Artists</SelectItem>
+                <SelectItem value="all">All Artists</SelectItem>
                 {uniqueArtists.map((artist) => (
                   <SelectItem key={artist} value={artist}>
                     {artist}
