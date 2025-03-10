@@ -1,88 +1,98 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import axios from "axios";
-import { UserResponse, User } from "@shared/schema";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { User } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
+interface LoginData {
+  username: string;
+  password: string;
+}
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   error: Error | null;
-  login: (username: string, password: string) => Promise<User>;
-  register: (userData: any) => Promise<User>;
+  loginMutation: ReturnType<typeof useLoginMutation>;
+  registerMutation: ReturnType<typeof useRegisterMutation>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function useLoginMutation() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (credentials: LoginData) => {
+      const response = await apiRequest("POST", "/api/login", credentials);
+      return response.json();
+    },
+    onSuccess: (user: User) => {
+      queryClient.setQueryData(["/api/user"], user);
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Login failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+}
+
+function useRegisterMutation() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (userData: any) => {
+      const response = await apiRequest("POST", "/api/register", userData);
+      return response.json();
+    },
+    onSuccess: (user: User) => {
+      queryClient.setQueryData(["/api/user"], user);
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Registration failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: user, isLoading: isUserLoading } = useQuery<User>({
-    queryKey: ["user"],
+  const { data: user, isLoading } = useQuery<User | null>({
+    queryKey: ["/api/user"],
     queryFn: async () => {
       try {
-        const response = await axios.get<User>("/api/user");
-        return response.data;
+        const response = await apiRequest("GET", "/api/user");
+        return response.json();
       } catch (error) {
-        // If 401 unauthorized, this is expected when not logged in
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-          return null as unknown as User;
+        if (error instanceof Error && error.message.includes("401")) {
+          return null;
         }
         throw error;
       }
     },
-    refetchOnWindowFocus: false,
-    retry: false
   });
 
-  const login = async (username: string, password: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await axios.post<User>("/api/login", {
-        username,
-        password
-      });
-      setIsLoading(false);
-      queryClient.setQueryData(["user"], response.data);
-      return response.data;
-    } catch (error) {
-      setIsLoading(false);
-      const err = error instanceof Error ? error : new Error("An error occurred during login");
-      setError(err);
-      throw err;
-    }
-  };
-
-  const register = async (userData: any) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await axios.post<User>("/api/register", userData);
-      setIsLoading(false);
-      queryClient.setQueryData(["user"], response.data);
-      return response.data;
-    } catch (error) {
-      setIsLoading(false);
-      const err = error instanceof Error ? error : new Error("An error occurred during registration");
-      setError(err);
-      throw err;
-    }
-  };
+  const loginMutation = useLoginMutation();
+  const registerMutation = useRegisterMutation();
 
   const logout = async () => {
-    setIsLoading(true);
-    setError(null);
     try {
-      await axios.post("/api/logout");
-      queryClient.setQueryData(["user"], null);
-      setIsLoading(false);
+      await apiRequest("POST", "/api/logout");
+      queryClient.setQueryData(["/api/user"], null);
     } catch (error) {
-      setIsLoading(false);
-      const err = error instanceof Error ? error : new Error("An error occurred during logout");
+      const err = error instanceof Error ? error : new Error("Logout failed");
       setError(err);
       throw err;
     }
@@ -90,10 +100,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = {
     user: user || null,
-    isLoading: isLoading || isUserLoading,
+    isLoading,
     error,
-    login,
-    register,
+    loginMutation,
+    registerMutation,
     logout,
     isAuthenticated: !!user
   };

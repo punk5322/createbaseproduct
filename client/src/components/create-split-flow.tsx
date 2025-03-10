@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
@@ -36,7 +37,7 @@ export default function CreateSplitFlow({ open, onOpenChange, onComplete }: Crea
   const [step, setStep] = useState(1);
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const { toast } = useToast();
-  
+
   const form = useForm<SplitFormValues>({
     resolver: zodResolver(splitFormSchema),
     defaultValues: {
@@ -50,28 +51,50 @@ export default function CreateSplitFlow({ open, onOpenChange, onComplete }: Crea
 
   const remainingSplit = 100 - collaborators.reduce((acc, curr) => acc + curr.split, 0);
 
-  const onSubmit = (values: SplitFormValues) => {
+  const handleNextStep = async (values: SplitFormValues) => {
     if (step === 1) {
-      // Move to split allocation step
       setStep(2);
     } else if (step === 2) {
-      // Save main artist data and move to collaborator step
-      form.setValue("split", remainingSplit);
       setStep(3);
     }
   };
 
-  const addCollaborator = (collaborator: Collaborator) => {
-    setCollaborators([...collaborators, collaborator]);
-    if (remainingSplit - collaborator.split <= 0) {
-      // No more splits available, move to confirmation
+  const addCollaborator = () => {
+    const values = form.getValues();
+    if (!values.artistName || !values.songwriterName) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields for the collaborator.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newCollaborator: Collaborator = {
+      artistName: values.artistName,
+      songwriterName: values.songwriterName,
+      split: values.split,
+    };
+
+    setCollaborators([...collaborators, newCollaborator]);
+
+    // Reset collaborator fields but keep song details
+    form.reset({
+      ...form.getValues(),
+      artistName: "",
+      songwriterName: "",
+      split: Math.max(0, remainingSplit - values.split),
+    });
+
+    if (remainingSplit - values.split <= 0) {
       setStep(4);
     }
   };
 
   const handleComplete = () => {
+    const mainArtist = form.getValues();
     onComplete({
-      mainArtist: form.getValues(),
+      mainArtist,
       collaborators,
     });
     onOpenChange(false);
@@ -86,7 +109,7 @@ export default function CreateSplitFlow({ open, onOpenChange, onComplete }: Crea
         <DialogHeader>
           <DialogTitle>
             {step === 1 && "Create New Split - Song Details"}
-            {step === 2 && "Allocate Split Percentage"}
+            {step === 2 && "Set Your Split Percentage"}
             {step === 3 && "Add Collaborator"}
             {step === 4 && "Confirm Split Details"}
           </DialogTitle>
@@ -106,100 +129,97 @@ export default function CreateSplitFlow({ open, onOpenChange, onComplete }: Crea
           </div>
         </div>
 
-        {step === 1 && (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="songTitle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Song Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter song title" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="artistName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Artist Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter artist name" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="songwriterName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Songwriter Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter songwriter name" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="albumName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Album Name (Optional)</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter album name" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-end gap-3 pt-4">
-                <Button onClick={() => onOpenChange(false)} variant="outline">
-                  Cancel
-                </Button>
-                <Button type="submit">Next</Button>
-              </div>
-            </form>
-          </Form>
-        )}
-
-        {step === 2 && (
-          <div className="space-y-6">
-            <div>
-              <Label className="text-base">Your Split Percentage</Label>
-              <div className="flex items-center gap-4 mt-2">
-                <Slider
-                  value={[form.getValues("split")]}
-                  onValueChange={([value]) => form.setValue("split", value)}
-                  max={100}
-                  step={1}
-                  className="flex-1"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleNextStep)} className="space-y-4">
+            {step === 1 && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="songTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Song Title</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter song title" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <span className="w-12 text-right">{form.getValues("split")}%</span>
-              </div>
-            </div>
-            <div className="flex justify-end gap-3">
-              <Button onClick={() => setStep(1)} variant="outline">
-                Back
-              </Button>
-              <Button onClick={() => setStep(3)}>Add Collaborator</Button>
-            </div>
-          </div>
-        )}
+                <FormField
+                  control={form.control}
+                  name="artistName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Artist Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter artist name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="songwriterName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Songwriter Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter songwriter name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="albumName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Album Name (Optional)</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter album name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
 
-        {step === 3 && (
-          <div className="space-y-6">
-            <h3 className="font-medium">Remaining Split: {remainingSplit}%</h3>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {step === 2 && (
+              <div className="space-y-4">
+                <div>
+                  <Label>Your Split Percentage</Label>
+                  <div className="flex items-center gap-4 mt-2">
+                    <FormField
+                      control={form.control}
+                      name="split"
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormControl>
+                            <Slider
+                              value={[field.value]}
+                              onValueChange={([value]) => field.onChange(value)}
+                              max={100}
+                              step={1}
+                              className="flex-1"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <span className="w-12 text-right">{form.getValues("split")}%</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="space-y-4">
+                <h3 className="font-medium">Remaining Split: {remainingSplit}%</h3>
                 <FormField
                   control={form.control}
                   name="artistName"
@@ -226,78 +246,93 @@ export default function CreateSplitFlow({ open, onOpenChange, onComplete }: Crea
                     </FormItem>
                   )}
                 />
-                <div>
-                  <Label>Split Percentage</Label>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Slider
-                      value={[remainingSplit]}
-                      onValueChange={([value]) => form.setValue("split", value)}
-                      max={remainingSplit}
-                      step={1}
-                      className="flex-1"
-                    />
-                    <span className="w-12 text-right">{remainingSplit}%</span>
-                  </div>
-                </div>
-                <div className="flex justify-end gap-3">
-                  <Button type="button" onClick={() => setStep(4)} variant="outline">
-                    Skip
-                  </Button>
-                  <Button 
-                    type="button"
-                    onClick={() => {
-                      addCollaborator({
-                        artistName: form.getValues("artistName"),
-                        songwriterName: form.getValues("songwriterName"),
-                        split: form.getValues("split"),
-                      });
-                      form.reset({
-                        songTitle: form.getValues("songTitle"),
-                        artistName: "",
-                        songwriterName: "",
-                        split: remainingSplit,
-                      });
-                    }}
-                  >
-                    Add Collaborator
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </div>
-        )}
-
-        {step === 4 && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="font-medium mb-4">Split Summary</h3>
-              <div className="space-y-4">
-                <div className="p-4 border rounded-lg">
-                  <p className="font-medium">{form.getValues("artistName")}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Songwriter: {form.getValues("songwriterName")}
-                  </p>
-                  <p className="text-sm font-medium mt-2">{form.getValues("split")}%</p>
-                </div>
-                {collaborators.map((collaborator, index) => (
-                  <div key={index} className="p-4 border rounded-lg">
-                    <p className="font-medium">{collaborator.artistName}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Songwriter: {collaborator.songwriterName}
-                    </p>
-                    <p className="text-sm font-medium mt-2">{collaborator.split}%</p>
-                  </div>
-                ))}
+                <FormField
+                  control={form.control}
+                  name="split"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Split Percentage</FormLabel>
+                      <div className="flex items-center gap-4 mt-2">
+                        <FormControl>
+                          <Slider
+                            value={[field.value]}
+                            onValueChange={([value]) => field.onChange(value)}
+                            max={remainingSplit}
+                            step={1}
+                            className="flex-1"
+                          />
+                        </FormControl>
+                        <span className="w-12 text-right">{field.value}%</span>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-            </div>
-            <div className="flex justify-end gap-3">
-              <Button onClick={() => setStep(3)} variant="outline">
-                Back
+            )}
+
+            {step === 4 && (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium mb-4">Split Summary</h3>
+                  <div className="space-y-4">
+                    <div className="p-4 border rounded-lg">
+                      <p className="font-medium">{form.getValues("artistName")}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Songwriter: {form.getValues("songwriterName")}
+                      </p>
+                      <p className="text-sm font-medium mt-2">{form.getValues("split")}%</p>
+                    </div>
+                    {collaborators.map((collaborator, index) => (
+                      <div key={index} className="p-4 border rounded-lg">
+                        <p className="font-medium">{collaborator.artistName}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Songwriter: {collaborator.songwriterName}
+                        </p>
+                        <p className="text-sm font-medium mt-2">{collaborator.split}%</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 pt-4">
+              {step !== 1 && (
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setStep(step - 1)}
+                >
+                  Back
+                </Button>
+              )}
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => {
+                  onOpenChange(false);
+                  setStep(1);
+                  form.reset();
+                  setCollaborators([]);
+                }}
+              >
+                Cancel
               </Button>
-              <Button onClick={handleComplete}>Save Split</Button>
+              {step === 3 ? (
+                <Button type="button" onClick={addCollaborator}>
+                  Add Collaborator
+                </Button>
+              ) : step === 4 ? (
+                <Button type="button" onClick={handleComplete}>
+                  Save Split
+                </Button>
+              ) : (
+                <Button type="submit">Next</Button>
+              )}
             </div>
-          </div>
-        )}
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
