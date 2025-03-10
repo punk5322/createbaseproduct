@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { usePayment } from "@/hooks/use-payment";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
@@ -7,36 +9,47 @@ import { Loader2, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
-import { Redirect } from "wouter";
 
 export default function Payment() {
-  const { user, updateUserMutation } = useAuth(); 
+  const { user } = useAuth();
+  const { paymentMutation } = usePayment();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  if (user?.paymentStatus === "completed") {
-    return <Redirect to="/eula" />;
-  }
-
-  const handlePayment = async () => {
-    setIsProcessing(true);
-    try {
-      await apiRequest("POST", "/api/payment", {});
+  // Update user mutation
+  const updateUserMutation = useMutation({
+    mutationFn: async (userData: any) => {
+      const response = await apiRequest("PATCH", `/api/users/${user?.id}`, userData);
+      return response.json();
+    },
+    onSuccess: () => {
       toast({
         title: "Payment successful",
         description: "Please proceed to review the EULA",
       });
-      updateUserMutation.mutate({ ...user, paymentStatus: "completed" });
       setLocation("/eula");
-    } catch (error: any) {
+    },
+    onError: (error: Error) => {
       toast({
-        title: "Payment failed",
+        title: "Error updating user status",
         description: error.message,
         variant: "destructive",
       });
-    } finally {
-      setIsProcessing(false);
+    },
+  });
+
+  if (user?.paymentStatus === "completed") {
+    setLocation("/eula");
+    return null;
+  }
+
+  const handlePayment = async () => {
+    try {
+      await paymentMutation.mutateAsync();
+      // After successful payment, update user status
+      updateUserMutation.mutate({ paymentStatus: "completed" });
+    } catch (error) {
+      // Error handling is done in the mutation callbacks
     }
   };
 
@@ -70,10 +83,10 @@ export default function Payment() {
                 </Button>
                 <Button
                   onClick={handlePayment}
-                  disabled={isProcessing}
+                  disabled={paymentMutation.isPending || updateUserMutation.isPending}
                   className="flex-1"
                 >
-                  {isProcessing ? (
+                  {paymentMutation.isPending || updateUserMutation.isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Processing...
