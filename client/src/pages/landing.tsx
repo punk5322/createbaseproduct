@@ -14,24 +14,25 @@ export default function LandingPage() {
     return null;
   }
 
-  // Redirect new users or users with incomplete onboarding
+  // New users go through onboarding
   if (user.isNewUser) {
     setLocation("/how-it-works");
     return null;
   }
-  
-  // Redirect users with pending payment
+
+  // Users with pending payment complete payment flow
   if (user.paymentStatus === "pending") {
     setLocation("/payment");
     return null;
   }
-  
-  // Redirect users with pending KYC
+
+  // Users with pending KYC complete EULA/KYC flow
   if (user.kycStatus === "pending") {
     setLocation("/eula");
     return null;
   }
 
+  // Returning users see the main options
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
