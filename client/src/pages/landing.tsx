@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo } from "@/components/ui/logo";
-import { Music, Library } from "lucide-react";
+import { Search, ChartBar } from "lucide-react";
 
 export default function LandingPage() {
   const { user } = useAuth();
@@ -33,33 +33,33 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <Card 
               className="hover:bg-accent/50 cursor-pointer transition-colors"
-              onClick={() => setLocation("/add-song")}
+              onClick={() => setLocation("/splits")}
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Music className="h-5 w-5" />
-                  Add New Song
+                  <Search className="h-5 w-5" />
+                  Find My Royalties
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Register a new song and manage its royalty splits using our AI-powered assistant
+                  Search global music databases to recover unpaid royalties and manage splits
                 </p>
               </CardContent>
             </Card>
             <Card 
               className="hover:bg-accent/50 cursor-pointer transition-colors"
-              onClick={() => setLocation("/splits")}
+              onClick={() => setLocation("/dashboard")}
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Library className="h-5 w-5" />
-                  View Splits
+                  <ChartBar className="h-5 w-5" />
+                  Go to Dashboard
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Access your song catalog and manage royalty distributions
+                  View your earnings, manage your catalog, and track performance
                 </p>
               </CardContent>
             </Card>
