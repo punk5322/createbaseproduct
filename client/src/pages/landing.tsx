@@ -31,8 +31,10 @@ export default function LandingPage() {
             Welcome back, {user.artistName}
           </h1>
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="hover:bg-accent/50 cursor-pointer transition-colors"
-                  onClick={() => setLocation("/add-song")}>
+            <Card 
+              className="hover:bg-accent/50 cursor-pointer transition-colors"
+              onClick={() => setLocation("/add-song")}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Music className="h-5 w-5" />
@@ -45,12 +47,14 @@ export default function LandingPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="hover:bg-accent/50 cursor-pointer transition-colors"
-                  onClick={() => setLocation("/dashboard")}>
+            <Card 
+              className="hover:bg-accent/50 cursor-pointer transition-colors"
+              onClick={() => setLocation("/splits")}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Library className="h-5 w-5" />
-                  View Dashboard
+                  View Splits
                 </CardTitle>
               </CardHeader>
               <CardContent>

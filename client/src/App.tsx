@@ -1,5 +1,5 @@
-import { QueryClientProvider } from "@tanstack/react-query";
 import { Switch, Route, useLocation, Redirect } from "wouter";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./lib/protected-route";
@@ -35,11 +35,10 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Wrapper for pages that need the main layout with proper path handling
-function ProtectedPageLayout({ page: Page }: { page: React.ComponentType }) {
+function ProtectedMainLayout({ component: Component }: { component: React.ComponentType }) {
   return (
     <MainLayout>
-      <Page />
+      <Component />
     </MainLayout>
   );
 }
@@ -50,6 +49,14 @@ function Router() {
       {/* Public routes */}
       <Route path="/auth" component={AuthPage} />
 
+      {/* Landing and story flow */}
+      <Route path="/">
+        <ProtectedRoute component={LandingPage} />
+      </Route>
+      <Route path="/add-song">
+        <ProtectedRoute component={() => <ProtectedMainLayout component={AddSongPage} />} />
+      </Route>
+
       {/* Onboarding flow routes */}
       <ProtectedRoute path="/onboarding" component={OnboardingPage} />
       <ProtectedRoute path="/how-it-works" component={HowItWorksPage} />
@@ -57,32 +64,26 @@ function Router() {
       <ProtectedRoute path="/eula" component={EULAPage} />
       <ProtectedRoute path="/kyc" component={KYCPage} />
 
-      {/* Main app routes with layout */}
+      {/* Main app routes */}
       <Route path="/dashboard">
-        <ProtectedRoute component={() => <ProtectedPageLayout page={HomePage} />} />
+        <ProtectedRoute component={() => <ProtectedMainLayout component={HomePage} />} />
       </Route>
-
       <Route path="/reporting">
-        <ProtectedRoute component={() => <ProtectedPageLayout page={ReportingPage} />} />
+        <ProtectedRoute component={() => <ProtectedMainLayout component={ReportingPage} />} />
       </Route>
-
       <Route path="/settings">
-        <ProtectedRoute component={() => <ProtectedPageLayout page={SettingsPage} />} />
+        <ProtectedRoute component={() => <ProtectedMainLayout component={SettingsPage} />} />
       </Route>
-
       <Route path="/payments">
-        <ProtectedRoute component={() => <ProtectedPageLayout page={PaymentsPage} />} />
+        <ProtectedRoute component={() => <ProtectedMainLayout component={PaymentsPage} />} />
       </Route>
-
       <Route path="/splits">
-        <ProtectedRoute component={() => <ProtectedPageLayout page={SplitsPage} />} />
+        <ProtectedRoute component={() => <ProtectedMainLayout component={SplitsPage} />} />
       </Route>
 
-      <Route path="/">
-        <Redirect to="/dashboard" />
+      <Route>
+        <NotFound />
       </Route>
-
-      <Route component={NotFound} />
     </Switch>
   );
 }
