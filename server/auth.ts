@@ -5,7 +5,7 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User as SelectUser } from "@shared/schema";
+import { User as SelectUser, insertUserSchema } from "@shared/schema";
 
 declare global {
   namespace Express {
@@ -184,16 +184,25 @@ export function setupAuth(app: Express) {
     try {
       console.log("Registration attempt:", req.body.username);
 
-      const existingUser = await storage.getUserByUsername(req.body.username);
+      // Validate all required fields using zod schema
+      const validatedData = insertUserSchema.parse(req.body);
+
+      const existingUser = await storage.getUserByUsername(validatedData.username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
 
-      const hashedPassword = await hashPassword(req.body.password);
-      const user = await storage.createUser({
-        ...req.body,
+      // Hash password and create user with all fields
+      const hashedPassword = await hashPassword(validatedData.password);
+      const userData = {
+        ...validatedData,
         password: hashedPassword,
-      });
+        isNewUser: true,
+        paymentStatus: "pending",
+        kycStatus: "pending"
+      };
+
+      const user = await storage.createUser(userData);
 
       // Copy initial song catalog for the new user
       await copyInitialSongCatalog(user.id);
@@ -204,7 +213,10 @@ export function setupAuth(app: Express) {
       });
     } catch (error: any) {
       console.error("Registration error:", error);
-      next(error);
+      res.status(400).json({ 
+        message: "Registration failed", 
+        errors: error.errors || [error.message] 
+      });
     }
   });
 
