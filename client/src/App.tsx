@@ -1,4 +1,4 @@
-import { Switch, Route, useLocation, Redirect } from "wouter";
+import { Switch, Route } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { AuthProvider } from "./hooks/use-auth";
@@ -35,55 +35,91 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ProtectedMainLayout({ component: Component }: { component: React.ComponentType }) {
-  return (
-    <MainLayout>
-      <Component />
-    </MainLayout>
-  );
-}
-
 function Router() {
   return (
     <Switch>
       {/* Public routes */}
       <Route path="/auth" component={AuthPage} />
 
-      {/* Landing and story flow */}
+      {/* Landing after login */}
       <Route path="/">
         <ProtectedRoute component={LandingPage} />
       </Route>
-      <Route path="/add-song">
-        <ProtectedRoute component={() => <ProtectedMainLayout component={AddSongPage} />} />
+
+      {/* Onboarding flow */}
+      <Route path="/onboarding">
+        <ProtectedRoute component={OnboardingPage} />
+      </Route>
+      <Route path="/how-it-works">
+        <ProtectedRoute component={HowItWorksPage} />
+      </Route>
+      <Route path="/payment">
+        <ProtectedRoute component={PaymentPage} />
+      </Route>
+      <Route path="/eula">
+        <ProtectedRoute component={EULAPage} />
+      </Route>
+      <Route path="/kyc">
+        <ProtectedRoute component={KYCPage} />
       </Route>
 
-      {/* Onboarding flow routes */}
-      <ProtectedRoute path="/onboarding" component={OnboardingPage} />
-      <ProtectedRoute path="/how-it-works" component={HowItWorksPage} />
-      <ProtectedRoute path="/payment" component={PaymentPage} />
-      <ProtectedRoute path="/eula" component={EULAPage} />
-      <ProtectedRoute path="/kyc" component={KYCPage} />
-
-      {/* Main app routes */}
+      {/* Main app routes with sidebar */}
       <Route path="/dashboard">
-        <ProtectedRoute component={() => <ProtectedMainLayout component={HomePage} />} />
+        <ProtectedRoute 
+          component={() => (
+            <MainLayout>
+              <HomePage />
+            </MainLayout>
+          )}
+        />
       </Route>
       <Route path="/reporting">
-        <ProtectedRoute component={() => <ProtectedMainLayout component={ReportingPage} />} />
+        <ProtectedRoute 
+          component={() => (
+            <MainLayout>
+              <ReportingPage />
+            </MainLayout>
+          )}
+        />
       </Route>
       <Route path="/settings">
-        <ProtectedRoute component={() => <ProtectedMainLayout component={SettingsPage} />} />
+        <ProtectedRoute 
+          component={() => (
+            <MainLayout>
+              <SettingsPage />
+            </MainLayout>
+          )}
+        />
       </Route>
       <Route path="/payments">
-        <ProtectedRoute component={() => <ProtectedMainLayout component={PaymentsPage} />} />
+        <ProtectedRoute 
+          component={() => (
+            <MainLayout>
+              <PaymentsPage />
+            </MainLayout>
+          )}
+        />
       </Route>
       <Route path="/splits">
-        <ProtectedRoute component={() => <ProtectedMainLayout component={SplitsPage} />} />
+        <ProtectedRoute 
+          component={() => (
+            <MainLayout>
+              <SplitsPage />
+            </MainLayout>
+          )}
+        />
+      </Route>
+      <Route path="/add-song">
+        <ProtectedRoute 
+          component={() => (
+            <MainLayout>
+              <AddSongPage />
+            </MainLayout>
+          )}
+        />
       </Route>
 
-      <Route>
-        <NotFound />
-      </Route>
+      <Route component={NotFound} />
     </Switch>
   );
 }

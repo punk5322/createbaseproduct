@@ -4,7 +4,7 @@ import { Redirect, Route } from "wouter";
 import { ReactElement } from "react";
 
 interface ProtectedRouteProps {
-  path: string;
+  path?: string;
   component: React.ComponentType;
 }
 
@@ -14,27 +14,29 @@ export function ProtectedRoute({
 }: ProtectedRouteProps): ReactElement {
   const { user, isLoading } = useAuth();
 
-  if (isLoading) {
-    return (
-      <Route path={path}>
+  const WrappedComponent = () => {
+    if (isLoading) {
+      return (
         <div className="flex items-center justify-center min-h-screen">
           <Loader2 className="h-8 w-8 animate-spin text-border" />
         </div>
-      </Route>
-    );
-  }
+      );
+    }
 
-  if (!user) {
+    if (!user) {
+      return <Redirect to="/auth" />;
+    }
+
+    return <Component />;
+  };
+
+  if (path) {
     return (
       <Route path={path}>
-        <Redirect to="/auth" />
+        <WrappedComponent />
       </Route>
     );
   }
 
-  return (
-    <Route path={path}>
-      <Component />
-    </Route>
-  );
+  return <WrappedComponent />;
 }
