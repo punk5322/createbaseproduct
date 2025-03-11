@@ -14,9 +14,21 @@ export default function LandingPage() {
     return null;
   }
 
-  // Don't show landing page for new users or incomplete onboarding
-  if (user.isNewUser || user.paymentStatus === "pending" || user.kycStatus === "pending") {
+  // Redirect new users or users with incomplete onboarding
+  if (user.isNewUser) {
     setLocation("/how-it-works");
+    return null;
+  }
+  
+  // Redirect users with pending payment
+  if (user.paymentStatus === "pending") {
+    setLocation("/payment");
+    return null;
+  }
+  
+  // Redirect users with pending KYC
+  if (user.kycStatus === "pending") {
+    setLocation("/eula");
     return null;
   }
 

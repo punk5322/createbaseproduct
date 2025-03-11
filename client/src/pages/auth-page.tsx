@@ -39,7 +39,7 @@ export default function AuthPage() {
       } else if (user.paymentStatus === "pending") {
         setLocation("/payment");
       } else if (user.kycStatus === "pending") {
-        setLocation("/kyc");
+        setLocation("/eula");
       } else {
         setLocation("/");
       }

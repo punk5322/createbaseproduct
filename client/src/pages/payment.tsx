@@ -38,10 +38,11 @@ export default function Payment() {
     },
   });
 
-  if (user?.paymentStatus === "completed") {
-    setLocation("/eula");
-    return null;
-  }
+  useEffect(() => {
+    if (user?.paymentStatus === "completed") {
+      setLocation("/eula");
+    }
+  }, [user, setLocation]);
 
   const handlePayment = async () => {
     try {
