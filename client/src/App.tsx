@@ -35,11 +35,11 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Wrapper for pages that need the main layout
-function ProtectedPageWithLayout({ component: Component }: { component: React.ComponentType }) {
+// Wrapper for pages that need the main layout with proper path handling
+function ProtectedPageLayout({ page: Page }: { page: React.ComponentType }) {
   return (
     <MainLayout>
-      <Component />
+      <Page />
     </MainLayout>
   );
 }
@@ -47,38 +47,41 @@ function ProtectedPageWithLayout({ component: Component }: { component: React.Co
 function Router() {
   return (
     <Switch>
+      {/* Public routes */}
       <Route path="/auth" component={AuthPage} />
+
+      {/* Onboarding flow routes */}
       <ProtectedRoute path="/onboarding" component={OnboardingPage} />
       <ProtectedRoute path="/how-it-works" component={HowItWorksPage} />
       <ProtectedRoute path="/payment" component={PaymentPage} />
       <ProtectedRoute path="/eula" component={EULAPage} />
       <ProtectedRoute path="/kyc" component={KYCPage} />
 
-      {/* Protected routes with MainLayout */}
-      <ProtectedRoute 
-        path="/dashboard" 
-        component={() => <ProtectedPageWithLayout component={HomePage} />} 
-      />
-      <ProtectedRoute 
-        path="/reporting" 
-        component={() => <ProtectedPageWithLayout component={ReportingPage} />} 
-      />
-      <ProtectedRoute 
-        path="/settings" 
-        component={() => <ProtectedPageWithLayout component={SettingsPage} />} 
-      />
-      <ProtectedRoute 
-        path="/payments" 
-        component={() => <ProtectedPageWithLayout component={PaymentsPage} />} 
-      />
-      <ProtectedRoute 
-        path="/splits" 
-        component={() => <ProtectedPageWithLayout component={SplitsPage} />} 
-      />
+      {/* Main app routes with layout */}
+      <Route path="/dashboard">
+        <ProtectedRoute component={() => <ProtectedPageLayout page={HomePage} />} />
+      </Route>
+
+      <Route path="/reporting">
+        <ProtectedRoute component={() => <ProtectedPageLayout page={ReportingPage} />} />
+      </Route>
+
+      <Route path="/settings">
+        <ProtectedRoute component={() => <ProtectedPageLayout page={SettingsPage} />} />
+      </Route>
+
+      <Route path="/payments">
+        <ProtectedRoute component={() => <ProtectedPageLayout page={PaymentsPage} />} />
+      </Route>
+
+      <Route path="/splits">
+        <ProtectedRoute component={() => <ProtectedPageLayout page={SplitsPage} />} />
+      </Route>
 
       <Route path="/">
         <Redirect to="/dashboard" />
       </Route>
+
       <Route component={NotFound} />
     </Switch>
   );
