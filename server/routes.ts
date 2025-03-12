@@ -6,8 +6,8 @@ import SpotifyWebApi from "spotify-web-api-node";
 
 // Initialize Spotify API client
 const spotifyApi = new SpotifyWebApi({
- clientId: process.env.SPOTIFY_CLIENT_ID,
- clientSecret: process.env.SPOTIFY_CLIENT_SECRET
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET
 });
 
 // Function to refresh Spotify access token
@@ -40,6 +40,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error: any) {
       console.error("Payment error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Tier upgrade payment endpoint
+  app.post("/api/payment/upgrade-tier", async (req, res) => {
+    try {
+      if (!req.user) {
+        console.log("Tier upgrade attempt without authentication");
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const songs = await storage.getSongs(req.user.id);
+      const currentTier = Math.floor(songs.length / 200);
+      const paidTier = req.user.songTier || 0;
+
+      if (currentTier <= paidTier) {
+        return res.status(400).json({ message: "Current tier not exceeded" });
+      }
+
+      // Mock payment processing
+      await storage.updateUser(req.user.id, { 
+        songTier: paidTier + 1 
+      });
+
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Tier upgrade error:", error);
       res.status(500).json({ message: error.message });
     }
   });
@@ -195,11 +223,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Modify the existing song creation endpoint to check tier limits
   app.post("/api/songs", async (req, res) => {
     try {
       if (!req.user) {
         console.log("Song creation attempt without authentication");
         return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Check song limit
+      const songs = await storage.getSongs(req.user.id);
+      const currentTier = Math.floor(songs.length / 200);
+      const paidTier = req.user.songTier || 0;
+
+      if (currentTier > paidTier) {
+        return res.status(403).json({ 
+          message: "Song limit reached. Please upgrade your tier to add more songs.",
+          redirectTo: "/dashboard"
+        });
       }
 
       console.log("Creating song for user:", req.user.id, "Data:", req.body);
