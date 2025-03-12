@@ -6,8 +6,8 @@ import SpotifyWebApi from "spotify-web-api-node";
 
 // Initialize Spotify API client
 const spotifyApi = new SpotifyWebApi({
-  clientId: process.env.SPOTIFY_CLIENT_ID,
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET
+ clientId: process.env.SPOTIFY_CLIENT_ID,
+ clientSecret: process.env.SPOTIFY_CLIENT_SECRET
 });
 
 // Function to refresh Spotify access token
@@ -28,12 +28,36 @@ setInterval(refreshSpotifyToken, 30 * 60 * 1000);
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
 
-  // Find royalties endpoint
+  // Add new payment route
+  app.post("/api/payment", async (req, res) => {
+    try {
+      if (!req.user) {
+        console.log("Payment attempt without authentication");
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      await storage.updateUser(req.user.id, { paymentStatus: "completed" });
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Payment error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Modify find-royalties endpoint to check payment status
   app.post("/api/find-royalties", async (req, res) => {
     try {
       if (!req.user) {
         console.log("Royalty search attempt without authentication");
         return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Check payment status before proceeding
+      if (req.user.paymentStatus !== "completed") {
+        return res.status(403).json({ 
+          message: "Payment required",
+          redirectTo: "/payment"
+        });
       }
 
       const { artistLink } = req.body;
@@ -134,20 +158,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/payment", async (req, res) => {
-    try {
-      if (!req.user) {
-        console.log("Payment attempt without authentication");
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-
-      await storage.updateUser(req.user.id, { paymentStatus: "completed" });
-      res.json({ success: true });
-    } catch (error: any) {
-      console.error("Payment error:", error);
-      res.status(500).json({ message: error.message });
-    }
-  });
 
   app.post("/api/kyc", async (req, res) => {
     if (!req.user) {

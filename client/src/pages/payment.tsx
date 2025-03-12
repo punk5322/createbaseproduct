@@ -1,56 +1,48 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { usePayment } from "@/hooks/use-payment";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
 import { Loader2, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
 
 export default function Payment() {
   const { user } = useAuth();
-  const { paymentMutation } = usePayment();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  // Update user mutation
-  const updateUserMutation = useMutation({
-    mutationFn: async (userData: any) => {
-      const response = await apiRequest("PATCH", `/api/users/${user?.id}`, userData);
-      return response.json();
-    },
-    onSuccess: () => {
+  // Redirect if payment is already completed
+  if (user?.paymentStatus === "completed") {
+    setLocation("/eula");
+    return null;
+  }
+
+  const handlePayment = async () => {
+    setIsProcessing(true);
+    try {
+      // Mock payment request
+      await apiRequest("POST", "/api/payment", {});
+
+      // Invalidate user query to refresh data
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+
       toast({
-        title: "Payment successful",
+        title: "Payment Successful",
         description: "Please proceed to review the EULA",
       });
       setLocation("/eula");
-    },
-    onError: (error: Error) => {
+    } catch (error: any) {
       toast({
-        title: "Error updating user status",
+        title: "Payment Failed",
         description: error.message,
         variant: "destructive",
       });
-    },
-  });
-
-  useEffect(() => {
-    if (user?.paymentStatus === "completed") {
-      setLocation("/eula");
-    }
-  }, [user, setLocation]);
-
-  const handlePayment = async () => {
-    try {
-      await paymentMutation.mutateAsync();
-      // After successful payment, update user status
-      updateUserMutation.mutate({ paymentStatus: "completed" });
-    } catch (error) {
-      // Error handling is done in the mutation callbacks
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -84,10 +76,10 @@ export default function Payment() {
                 </Button>
                 <Button
                   onClick={handlePayment}
-                  disabled={paymentMutation.isPending || updateUserMutation.isPending}
+                  disabled={isProcessing}
                   className="flex-1"
                 >
-                  {paymentMutation.isPending || updateUserMutation.isPending ? (
+                  {isProcessing ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Processing...
