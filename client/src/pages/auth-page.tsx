@@ -4,33 +4,20 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertUserSchema } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Logo } from "@/components/ui/logo";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Search, ChartBar } from "lucide-react";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { user, loginMutation, registerMutation } = useAuth();
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showLandingOptions, setShowLandingOptions] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -41,7 +28,8 @@ export default function AuthPage() {
       } else if (user.kycStatus === "pending") {
         setLocation("/eula");
       } else {
-        setLocation("/");
+        // Show landing options for returning users
+        setShowLandingOptions(true);
       }
     }
   }, [user, setLocation]);
@@ -65,6 +53,57 @@ export default function AuthPage() {
       spotifyArtistLink: "",
     },
   });
+
+  if (showLandingOptions) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex justify-center mb-8">
+            <Logo />
+          </div>
+          <div className="max-w-2xl mx-auto">
+            <h1 className="text-3xl font-bold text-center mb-8">
+              Welcome back, {user?.artistName}
+            </h1>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card 
+                className="hover:bg-accent/50 cursor-pointer transition-colors"
+                onClick={() => setLocation("/splits")}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Search className="h-5 w-5" />
+                    Find My Royalties
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Search global music databases to recover unpaid royalties and manage splits
+                  </p>
+                </CardContent>
+              </Card>
+              <Card 
+                className="hover:bg-accent/50 cursor-pointer transition-colors"
+                onClick={() => setLocation("/dashboard")}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ChartBar className="h-5 w-5" />
+                    Go to Dashboard
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    View your earnings, manage your catalog, and track performance
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
