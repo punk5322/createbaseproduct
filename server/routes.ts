@@ -2,9 +2,120 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
+import SpotifyWebApi from "spotify-web-api-node";
+
+// Initialize Spotify API client
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET
+});
+
+// Function to refresh Spotify access token
+async function refreshSpotifyToken() {
+  try {
+    const data = await spotifyApi.clientCredentialsGrant();
+    spotifyApi.setAccessToken(data.body.access_token);
+    console.log("Spotify token refreshed successfully");
+  } catch (error) {
+    console.error("Error refreshing Spotify token:", error);
+  }
+}
+
+// Refresh token initially and every 30 minutes
+refreshSpotifyToken();
+setInterval(refreshSpotifyToken, 30 * 60 * 1000);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
+
+  // Find royalties endpoint
+  app.post("/api/find-royalties", async (req, res) => {
+    try {
+      if (!req.user) {
+        console.log("Royalty search attempt without authentication");
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const { artistLink } = req.body;
+      if (!artistLink) {
+        return res.status(400).json({ message: "Artist link is required" });
+      }
+
+      // Extract artist ID from Spotify link
+      const artistId = artistLink.split("artist/")[1]?.split("?")[0];
+      if (!artistId) {
+        return res.status(400).json({ message: "Invalid Spotify artist link" });
+      }
+
+      // Get artist's top tracks
+      const artistData = await spotifyApi.getArtistTopTracks(artistId, 'US');
+
+      const songs = artistData.body.tracks.map(track => ({
+        id: track.id,
+        title: track.name,
+        artist: track.artists[0].name,
+        album: track.album.name,
+        releaseDate: track.album.release_date,
+        previewUrl: track.preview_url,
+        selected: false
+      }));
+
+      console.log("Found songs for artist:", songs.length);
+      res.json({ songs });
+    } catch (error: any) {
+      console.error("Error searching for royalties:", error);
+      res.status(500).json({ 
+        message: "Error searching for royalties",
+        error: error.message 
+      });
+    }
+  });
+
+  // Save selected songs endpoint
+  app.post("/api/save-selected-songs", async (req, res) => {
+    try {
+      if (!req.user) {
+        console.log("Song save attempt without authentication");
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const { songs } = req.body;
+      if (!Array.isArray(songs)) {
+        return res.status(400).json({ message: "Invalid songs data" });
+      }
+
+      // Check KYC status before allowing song save
+      if (req.user.kycStatus !== "completed") {
+        return res.status(403).json({ 
+          message: "KYC verification required",
+          redirectTo: "/kyc"
+        });
+      }
+
+      // Save each selected song
+      const savedSongs = await Promise.all(
+        songs.map(song => 
+          storage.createSong({
+            userId: req.user!.id,
+            title: song.title,
+            artist: song.artist,
+            status: "unclaimed",
+            splitData: {
+              music: [{ name: song.artist, percentage: 100 }],
+              lyrics: [{ name: song.artist, percentage: 100 }],
+              instruments: []
+            }
+          })
+        )
+      );
+
+      console.log("Saved songs:", savedSongs.length);
+      res.json({ success: true, songs: savedSongs });
+    } catch (error: any) {
+      console.error("Error saving songs:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
 
   app.put("/api/user", async (req, res) => {
     try {
