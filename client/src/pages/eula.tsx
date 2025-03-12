@@ -6,6 +6,8 @@ import { Header } from "@/components/ui/header";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
 
 export default function EULAPage() {
   const [, setLocation] = useLocation();
@@ -18,7 +20,7 @@ export default function EULAPage() {
     return null;
   }
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!accepted) {
       toast({
         title: "Agreement Required",
@@ -27,7 +29,30 @@ export default function EULAPage() {
       });
       return;
     }
-    setLocation("/kyc");
+
+    try {
+      // Update user's EULA acceptance status
+      await apiRequest("PUT", "/api/user", {
+        eulaAccepted: true
+      });
+
+      // Invalidate user query to refresh data
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+
+      toast({
+        title: "EULA Accepted",
+        description: "Thank you for accepting the terms.",
+      });
+
+      // Redirect to dashboard after acceptance
+      setLocation("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -124,7 +149,7 @@ export default function EULAPage() {
               <Button
                 variant="outline"
                 className="flex-1"
-                onClick={() => setLocation("/payment")}
+                onClick={() => setLocation("/kyc")}
                 type="button"
               >
                 Back
@@ -134,7 +159,7 @@ export default function EULAPage() {
                 onClick={handleContinue}
                 type="button"
               >
-                Next: Verify Identity
+                Continue to Dashboard
               </Button>
             </div>
           </CardContent>

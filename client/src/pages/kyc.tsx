@@ -46,7 +46,7 @@ export default function KYCPage() {
         title: "KYC Completed",
         description: "Your driver's license has been uploaded successfully",
       });
-      setLocation("/dashboard");
+      setLocation("/eula");
     } catch (error: any) {
       toast({
         title: "Upload Failed",
@@ -84,7 +84,7 @@ export default function KYCPage() {
                 <Button
                   variant="outline"
                   className="flex-1"
-                  onClick={() => setLocation("/eula")}
+                  onClick={() => setLocation("/how-it-works")}
                 >
                   Back
                 </Button>
